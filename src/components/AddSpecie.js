@@ -52,7 +52,7 @@ class AddSpecie extends Component {
         required
         >
         <label>Nome</label>
-        <Form.Input placeholder='Name' name='name' onChange={this.handleChange} />
+        <Form.Input placeholder='Nome' name='name' onChange={this.handleChange} />
       </Form.Field>
       <Message
         success
