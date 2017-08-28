@@ -1,9 +1,9 @@
 import React from 'react';
 import Route from 'react-router-dom/Route';
 import Switch from 'react-router-dom/Switch';
-import Home from './Home';
 import ListSpecies from './components/ListSpecies'
 import AddSpecie from './components/AddSpecie'
+import Home from './components/Home'
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 
