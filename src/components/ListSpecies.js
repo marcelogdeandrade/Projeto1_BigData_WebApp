@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Label, Menu, Table } from 'semantic-ui-react'
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
-import { getDogs } from '../modules/Controller'
+import { getSpecies } from '../modules/Controller'
 
 
 class ListSpecies extends Component {
@@ -20,7 +20,7 @@ class ListSpecies extends Component {
     this.setState({
       fetching: true
     })
-    getDogs()
+    getSpecies()
       .then(result => {
         this.setState({
           species: result.data,

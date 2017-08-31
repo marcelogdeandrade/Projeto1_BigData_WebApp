@@ -5,7 +5,7 @@ const api = create({
   headers: { 'Accept': 'application/vnd.github.v3+json' }
 })
 
-export const getDogs = async () => {
+export const getSpecies = async () => {
   return api
       .get('/species')
       .then((response) => response)
