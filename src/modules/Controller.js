@@ -7,14 +7,13 @@ const api = create({
 
 export const getDogs = async () => {
   return api
-      .get('/get_dogs')
+      .get('/species')
       .then((response) => response)
 }
 
 export const addSpecie = async (name) => {
-  console.log('addSpecie')
   return api
-    .post('/get_dogs', {name: name})
+    .post('/species', {name: name})
     .then((response) => response)
 }
 
