@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Message, Dimmer, Loader, Segment, Select, Dropdown, Grid } from 'semantic-ui-react'
+import { 
+  Button, 
+  Checkbox, 
+  Form, 
+  Message, 
+  Dimmer, 
+  Loader, 
+  Segment, 
+  Select, 
+  Dropdown, 
+  Grid 
+} from 'semantic-ui-react'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-import { addPet, getMedicines} from '../../modules/Controller'
+import { 
+  addPet, 
+  getMedicines
+} from '../../modules/Controller'
 
 
 class AddPet extends Component {
@@ -16,29 +30,33 @@ class AddPet extends Component {
       error: false,
       birthDate: moment()
     }
-    this.renderForm = this.renderForm.bind(this)
-    this.handleChangeDate = this.handleChangeDate.bind(this)
   }
 
-  handleChangeName = (e, { name, value }) => this.setState({ name: value })
+  /**
+   * Input Handlers
+   * 
+   * @memberof AddPet
+   */
+  _handleChangeName = (e, { name, value }) => this.setState({ name: value })
 
-  handleChangeDate(date) {
+  _handleChangeDate(date) {
     this.setState({
       birthDate: date
     });
   }
 
-  handleChangeSpecies = (e, { name, value }) => this.setState({ idSpecies: value })
+  _handleChangeSpecies = (e, { name, value }) => this.setState({ idSpecies: value })
 
-  handleChangeClient = (e, { name, value }) => this.setState({ idClient: value })
+  _handleChangeClient = (e, { name, value }) => this.setState({ idClient: value })
 
-  handleChangeMedicines = (e, { name, value }) => this.setState({ medicines: value })
+  _handleChangeMedicines = (e, { name, value }) => this.setState({ medicines: value })
+
+  /******/
 
   handleSubmit = () => {
     let { name, idSpecies, idClient, birthDate, medicines } = this.state
     birthDate = moment(birthDate).format('DD-MM-YYYY')
-    console.log(name, idSpecies, idClient, birthDate, medicines)
-    this.setState({ submittedName: name, fetching: true })
+    this.setState({ fetching: true })
     addPet(name, idSpecies, idClient, birthDate)
       .then(result => {
         this.setState({
@@ -56,14 +74,29 @@ class AddPet extends Component {
       })
   }
 
-
-  renderForm() {
+  _renderMessages(){
+    return(
+      <div>
+        <Message
+          success
+          header='Espécie Adicionada'
+          content="Você adicionou uma espécie com sucesso"
+        />
+        <Message
+          error
+          header='Erro'
+          content='Houve um erro ao tentar adicionar uma espécie'
+        />
+      </div>
+    )
+  }
+  _renderForm() {
     
     // Options de teste
     const species = [{ key: 'Cachorro', value: 'Cachorro', text: 'Cachorro' }, { key: 'Gato', value: 'Gato', text: 'Gato' }]
     const clients = [{ key: 'Marcelo', value: 'Marcelo', text: 'Marcelo' }, { key: 'Gabi', value: 'Gabi', text: 'Gabi' }]
     const medicines = [{ key: 'Vacina', value: 'Vacina', text: 'Vacina' }, { key: 'Pilula', value: 'Pilula', text: 'Pilula' }]
-    const { name } = this.state
+    //
     return (
       <Form
         loading={this.state.fetching}
@@ -76,26 +109,26 @@ class AddPet extends Component {
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this.handleChangeName} />
+          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
         {/* Espécie */}
         <Form.Field
           required
         >
           <label>Espécie</label>
-          <Select placeholder='Espécie' options={species} onChange={this.handleChangeSpecies} />
+          <Select placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
         </Form.Field>
         {/* Cliente */}
         <Form.Field
         >
           <label>Cliente</label>
-          <Select placeholder='Cliente' options={clients} onChange={this.handleChangeClient}/>
+          <Select placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
         </Form.Field>
         {/* Remédios */}
         <Form.Field
         >
           <label>Remédios</label>
-          <Dropdown placeholder='Remédios' onChange={this.handleChangeMedicines} fluid multiple selection options={medicines} />
+          <Dropdown placeholder='Remédios' onChange={this._handleChangeMedicines} fluid multiple selection options={medicines} />
         </Form.Field>
         {/* Data de Nascimento */}
         <Form.Field
@@ -103,20 +136,11 @@ class AddPet extends Component {
           <label>Data de nascimento</label>
           <DatePicker
             selected={this.state.birthDate}
-            onChange={this.handleChangeDate}
+            onChange={this._handleChangeDate}
             dateFormat={'DD/MM/YYYY'}
           />
         </Form.Field>
-        <Message
-          success
-          header='Espécie Adicionada'
-          content="Você adicionou uma espécie com sucesso"
-        />
-        <Message
-          error
-          header='Erro'
-          content='Houve um erro ao tentar adicionar uma espécie'
-        />
+        {this._renderMessages()}
         <Button type='submit'>Adicionar Pet</Button>
       </Form>
     )
@@ -128,7 +152,7 @@ class AddPet extends Component {
         <Grid.Row>
           <Grid.Column width={4}>
             <Segment>
-              {this.renderForm()}
+              {this._renderForm()}
             </Segment>
           </Grid.Column>
         </Grid.Row>

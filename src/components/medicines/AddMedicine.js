@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Message, Dimmer, Loader, Segment, Select, Dropdown, Input, Grid } from 'semantic-ui-react'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
+import { 
+  Button, 
+  Checkbox, 
+  Form, 
+  Message, 
+  Dimmer, 
+  Loader, 
+  Segment, 
+  Select, 
+  Dropdown, 
+  Input, 
+  Grid 
+} from 'semantic-ui-react'
 
-import { addMedicine, getPets } from '../../modules/Controller'
+import { 
+  addMedicine, 
+  getPets 
+} from '../../modules/Controller'
 
 
 class AddMedicine extends Component {
@@ -15,14 +27,20 @@ class AddMedicine extends Component {
       success: false,
       error: false,
     }
-    this.renderForm = this.renderForm.bind(this)
   }
 
-  handleChangeName = (e, { name, value }) => this.setState({ name: value })
+  /**
+   * Input Handlers
+   * 
+   * @memberof AddMedicine
+   */
+  _handleChangeName = (e, { name, value }) => this.setState({ name: value })
 
-  handleChangeQuantity = (e, { name, value }) => this.setState({ quantity: value })
+  _handleChangeQuantity = (e, { name, value }) => this.setState({ quantity: value })
 
-  handleChangePets = (e, { name, value }) => this.setState({ pets: value })
+  _handleChangePets = (e, { name, value }) => this.setState({ pets: value })
+
+  /*********/
 
   handleSubmit = () => {
     let { name, quantity, pets } = this.state
@@ -44,12 +62,26 @@ class AddMedicine extends Component {
       })
   }
 
-
-  renderForm() {
+  _renderMessages(){
+    return(
+      <div>
+        <Message
+          success
+          header='Espécie Adicionada'
+          content="Você adicionou uma espécie com sucesso"
+        />
+        <Message
+          error
+          header='Erro'
+          content='Houve um erro ao tentar adicionar uma espécie'
+        />
+      </div>
+    )
+  }
+  _renderForm() {
 
     // Options de teste
     const pets = [{ key: 'Boris', value: 'Boris', text: 'Boris' }, { key: 'Nala', value: 'Nala', text: 'Nala' }]
-    const { name } = this.state
     const units = [
       { key: 'ml', text: 'ml', value: 'ml' },
       { key: 'g', text: 'g', value: 'g' },
@@ -66,7 +98,7 @@ class AddMedicine extends Component {
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this.handleChangeName} />
+          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
         {/* Quantidade */}
         <Form.Field
@@ -76,25 +108,16 @@ class AddMedicine extends Component {
             label={<Dropdown defaultValue='ml' options={units} />}
             labelPosition='right'
             placeholder='Quantidade'
-            onChange={this.handleChangeQuantity}
+            onChange={this._handleChangeQuantity}
           />
         </Form.Field>
         {/* Pets */}
         <Form.Field
         >
           <label>Pets</label>
-          <Dropdown placeholder='Pets' onChange={this.handleChangePets} fluid multiple selection options={pets} />
+          <Dropdown placeholder='Pets' onChange={this._handleChangePets} fluid multiple selection options={pets} />
         </Form.Field>
-        <Message
-          success
-          header='Espécie Adicionada'
-          content="Você adicionou uma espécie com sucesso"
-        />
-        <Message
-          error
-          header='Erro'
-          content='Houve um erro ao tentar adicionar uma espécie'
-        />
+        {this._renderMessages()}
         <Button type='submit'>Adicionar Remédio</Button>
       </Form>
     )
@@ -106,7 +129,7 @@ class AddMedicine extends Component {
         <Grid.Row>
           <Grid.Column width={4}>
             <Segment>
-              {this.renderForm()}
+              {this._renderForm()}
             </Segment>
           </Grid.Column>
         </Grid.Row>

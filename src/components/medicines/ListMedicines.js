@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
-import { Icon, Label, Menu, Table, Message, Dimmer, Loader, Image, Segment  } from 'semantic-ui-react'
+import { 
+  Icon, 
+  Label, 
+  Menu, 
+  Table, 
+  Message, 
+  Dimmer, 
+  Loader, 
+  Image, 
+  Segment  
+} from 'semantic-ui-react'
 
-import { getMedicines } from '../../modules/Controller'
+import { 
+  getMedicines 
+} from '../../modules/Controller'
 
 
 class ListMedicines extends Component {
@@ -13,10 +25,13 @@ class ListMedicines extends Component {
       fetching: false,
       error: false
     }
-    this.renderTable = this.renderTable.bind(this)
-    this.componentDidMount = this.componentDidMount.bind(this)
   }
 
+  /**
+   * Requisição REST de todos remédios
+   * 
+   * @memberof ListMedicines
+   */
   componentDidMount() {
     this.setState({
       fetching: true
@@ -38,7 +53,7 @@ class ListMedicines extends Component {
       })
   }
 
-  renderRow(id, name, quantity, pets) {
+  _renderRow(id, name, quantity, pets) {
     return (
       <Table.Row>
         <Table.Cell>{id}</Table.Cell>
@@ -49,7 +64,7 @@ class ListMedicines extends Component {
     )
   }
 
-  renderTable() {
+  _renderTable() {
     return (
       <Table celled>
 
@@ -64,7 +79,7 @@ class ListMedicines extends Component {
 
         <Table.Body>
           {this.state.medicines.map(medicine => {
-            return this.renderRow(medicine.idMedicine, medicine.name, medicine.pets)
+            return this._renderRow(medicine.idMedicine, medicine.name, medicine.pets)
           })}
         </Table.Body>
 
@@ -72,12 +87,8 @@ class ListMedicines extends Component {
     )
   }
 
-  renderLoading() {
-
-  }
-
-  render() {
-    return (
+  _renderMessages(){
+    return(
       <div>
         <Message
           error
@@ -85,14 +96,22 @@ class ListMedicines extends Component {
           header='Erro'
           content='Houve um erro ao tentar listar os remédios'
         />
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        {this._renderMessages()}
         <Segment>
           <Dimmer
             disabled={!this.state.fetching}
             active={this.state.fetching}
           >
-            <Loader />
+            <Loader/>
           </Dimmer>
-          {this.renderTable()}
+          {this._renderTable()}
         </Segment>
       </div>
     )

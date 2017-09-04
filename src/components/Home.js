@@ -12,7 +12,7 @@ class Home extends Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
-  renderContent() {
+  _renderContent() {
     if (this.state.activeItem === 'list_species'){
       return (
         <ListSpecies/>
@@ -38,8 +38,8 @@ class Home extends Component {
         <AddMedicine />
       )
     } 
-
   }
+
   render() {
     const { activeItem } = this.state
 
@@ -71,7 +71,7 @@ class Home extends Component {
           </Menu.Item>
 
         </Menu>
-        {this.renderContent()}
+        {this._renderContent()}
       </Segment>
     )
   }

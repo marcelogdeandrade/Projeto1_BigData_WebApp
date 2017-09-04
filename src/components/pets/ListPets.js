@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
-import { Icon, Label, Menu, Table, Message, Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
+import { 
+  Icon, 
+  Label, 
+  Menu, 
+  Table, 
+  Message, 
+  Dimmer, 
+  Loader, 
+  Image, 
+  Segment 
+} from 'semantic-ui-react'
 
-import { getPets } from '../../modules/Controller'
+import { 
+  getPets 
+} from '../../modules/Controller'
 
 
 class ListPets extends Component {
@@ -13,10 +25,13 @@ class ListPets extends Component {
       fetching: false,
       error: false
     }
-    this.renderTable = this.renderTable.bind(this)
-    this.componentDidMount = this.componentDidMount.bind(this)
   }
 
+  /**
+   * Requisição REST de todos os Pets
+   * 
+   * @memberof ListPets
+   */
   componentDidMount() {
     this.setState({
       fetching: true
@@ -38,7 +53,7 @@ class ListPets extends Component {
       })
   }
 
-  renderRow(id, name, speciesName, birthDate, clientName, medicines) {
+  _renderRow(id, name, speciesName, birthDate, clientName, medicines) {
     return (
       <Table.Row>
         <Table.Cell>{id}</Table.Cell>
@@ -51,7 +66,7 @@ class ListPets extends Component {
     )
   }
 
-  renderTable() {
+  _renderTable() {
     return (
       <Table celled>
 
@@ -68,7 +83,12 @@ class ListPets extends Component {
 
         <Table.Body>
           {this.state.pets.map(pet => {
-            return this.renderRow(pet.idPet, pet.name, pet.speciesName, pet.birthDate, pet.clientName, pet.medicines)
+            return this._renderRow(pet.idPet, 
+                                   pet.name, 
+                                   pet.speciesName, 
+                                   pet.birthDate, 
+                                   pet.clientName, 
+                                   pet.medicines)
           })}
         </Table.Body>
 
@@ -76,12 +96,8 @@ class ListPets extends Component {
     )
   }
 
-  renderLoading() {
-
-  }
-
-  render() {
-    return (
+  _renderMessages(){
+    return(
       <div>
         <Message
           error
@@ -89,6 +105,14 @@ class ListPets extends Component {
           header='Erro'
           content='Houve um erro ao tentar listar os pets'
         />
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        {this._renderMessages()}
         <Segment>
           <Dimmer
             disabled={!this.state.fetching}
@@ -96,7 +120,7 @@ class ListPets extends Component {
           >
             <Loader />
           </Dimmer>
-          {this.renderTable()}
+          {this._renderTable()}
         </Segment>
       </div>
     )

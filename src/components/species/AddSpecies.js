@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Message, Dimmer, Loader, Segment, Grid  } from 'semantic-ui-react'
-import { addSpecies } from '../../modules/Controller'
+import { 
+  Button, 
+  Checkbox, 
+  Form, 
+  Message, 
+  Dimmer, 
+  Loader, 
+  Segment, 
+  Grid  
+} from 'semantic-ui-react'
+
+import { 
+  addSpecies 
+} from '../../modules/Controller'
 
 
 class AddSpecies extends Component {
@@ -11,12 +23,15 @@ class AddSpecies extends Component {
       success: false,
       error: false
     }
-    this.renderForm = this.renderForm.bind(this)
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  _handleChangeName = (e, { name, value }) => this.setState({ [name]: value })
 
-
+  /**
+   * 
+   * Adiciona uma espécie
+   * @memberof AddSpecies
+   */
   handleSubmit = () => {
     const { name } = this.state
     this.setState({ submittedName: name, fetching: true })
@@ -37,8 +52,25 @@ class AddSpecies extends Component {
       })
   }
 
+  _renderMessages() {
+    return(
+      <div>
+        <Message
+          success
+          header='Espécie Adicionada'
+          content="Você adicionou uma espécie com sucesso"
+        />
+        <Message
+          error
+          header='Erro'
+          content='Houve um erro ao tentar adicionar uma espécie'
+        />
+      </div>
+    )
+  }
 
-  renderForm() {
+
+  _renderForm() {
     const { name } = this.state
     return(
     <Form
@@ -51,18 +83,9 @@ class AddSpecies extends Component {
         required
         >
         <label>Nome</label>
-        <Form.Input placeholder='Nome' name='name' onChange={this.handleChange} />
+        <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
       </Form.Field>
-      <Message
-        success
-        header='Espécie Adicionada'
-        content="Você adicionou uma espécie com sucesso"
-      />
-      <Message
-        error
-        header='Erro'
-        content='Houve um erro ao tentar adicionar uma espécie'
-      />
+      {this._renderMessages()}
       <Button type='submit'>Adicionar Espécie</Button>
     </Form>
     )
@@ -74,7 +97,7 @@ class AddSpecies extends Component {
         <Grid.Row>
           <Grid.Column width={4}>
             <Segment>
-              {this.renderForm()}
+              {this._renderForm()}
             </Segment>
           </Grid.Column>
         </Grid.Row>
