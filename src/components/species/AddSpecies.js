@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Message } from 'semantic-ui-react'
-import { Dimmer, Loader, Segment } from 'semantic-ui-react'
-import { addSpecie } from '../modules/Controller'
+import { Button, Checkbox, Form, Message, Dimmer, Loader, Segment, Grid  } from 'semantic-ui-react'
+import { addSpecies } from '../../modules/Controller'
 
 
-class AddSpecie extends Component {
+class AddSpecies extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -21,7 +20,7 @@ class AddSpecie extends Component {
   handleSubmit = () => {
     const { name } = this.state
     this.setState({ submittedName: name, fetching: true })
-    addSpecie(name)
+    addSpecies(name)
       .then(result => {
         this.setState({
           fetching: false
@@ -71,11 +70,17 @@ class AddSpecie extends Component {
 
   render() {
     return (
-      <Segment>
-       {this.renderForm()}
-      </Segment>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={4}>
+            <Segment>
+              {this.renderForm()}
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }
 
-export default AddSpecie;
+export default AddSpecies;

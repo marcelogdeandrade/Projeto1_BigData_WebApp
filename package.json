@@ -11,8 +11,10 @@
   "dependencies": {
     "apisauce": "^0.14.1",
     "express": "^4.15.4",
+    "moment": "^2.18.1",
     "razzle": "^0.7.6-rc2",
     "react": "^15.6.1",
+    "react-datepicker": "^0.53.0",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.2.0",
     "semantic-ui-css": "^2.2.12",
