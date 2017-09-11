@@ -1,34 +1,33 @@
 import React, { Component } from 'react';
 import {
-  Icon, 
-  Label, 
-  Table, 
-  Message, 
+  Icon,
+  Label,
+  Table,
+  Message,
   Dimmer,
-  Loader, 
-  Segment, 
-  Button, 
-  Modal, 
-  Header 
+  Loader,
+  Segment,
+  Button,
+  Modal,
+  Header
 } from 'semantic-ui-react'
 
-import { 
-  getSpecies, 
-  removeSpecies 
+import {
+  getClients,
+  removeClient
 } from '../../modules/Controller'
 
-import moment from 'moment'
 
-class ListSpecies extends Component {
+class ListClients extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      species: [], //Trocar depois para array vazia
+      clients: [], //Trocar depois para array vazia
       fetching: false,
       error: false,
-      errorRemoveSpecies: false,
-      successRemoveSpecies: false,
+      errorRemoveClient: false,
+      successRemoveClient: false,
       modalOpen: false
     }
   }
@@ -42,9 +41,9 @@ class ListSpecies extends Component {
     this.setState({
       fetching: true
     })
-    getSpecies()
+    getClients()
       .then(result => {
-        if (result.problem){
+        if (result.problem) {
           this.setState({
             error: true,
             fetching: false
@@ -52,40 +51,46 @@ class ListSpecies extends Component {
         } else {
           this.setState({
             error: false,
-            species: result.data,
+            clients: result.data,
             fetching: false
           })
         }
       })
   }
-  
-  _renderRow(id, name) {
+
+  _formatDate(date) {
+    return moment(date).format('DD/MM/YYYY')
+  }
+
+  _renderRow(id, name, birthDate) {
     return (
-    <Table.Row>
-      <Table.Cell>{id}</Table.Cell>
-      <Table.Cell>{name}</Table.Cell>
-      <Table.Cell textAlign={'center'}>
-          <Button negative icon='remove' onClick={() => this._handleOpen(id)}/>
-      </Table.Cell>
-    </Table.Row>
+      <Table.Row>
+        <Table.Cell>{id}</Table.Cell>
+        <Table.Cell>{name}</Table.Cell>
+        <Table.Cell>{birthDate}</Table.Cell>        
+        <Table.Cell textAlign={'center'}>
+          <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
+        </Table.Cell>
+      </Table.Row>
     )
   }
 
   _renderTable() {
     return (
-     <Table celled>
+      <Table celled>
 
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Nome</Table.HeaderCell>
+            <Table.HeaderCell>Data de nascimento</Table.HeaderCell>
             <Table.HeaderCell width={1}></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {this.state.species.map(specie => {
-            return this._renderRow(specie.idSpecies, specie.name)
+          {this.state.clients.map(client => {
+            return this._renderRow(client.idClient, client.name, this._formatDate(client.birthDate))
           })}
         </Table.Body>
 
@@ -95,15 +100,14 @@ class ListSpecies extends Component {
 
   /**
    * Handlers do modal
-   * @memberof ListSpecies
    */
-  _handleOpen = (id) => this.setState({selectedSpecies: id, modalOpen: true })
+  _handleOpen = (id) => this.setState({ selectedClient: id, modalOpen: true })
 
   _handleClose = () => this.setState({ modalOpen: false })
 
-  
-  handleRemoveSpecie = () => {
-    removeSpecies(this.state.selectedSpecies)
+
+  handleRemoveClient = () => {
+    removeClient(this.state.selectedClient)
       .then(result => {
         this.setState({
           fetching: false,
@@ -111,55 +115,55 @@ class ListSpecies extends Component {
         })
         if (!result.problem) {
           this.setState({
-            successRemoveSpecies: true
+            successRemoveClient: true
           })
         } else {
           this.setState({
-            errorRemoveSpecies: true
+            errorRemoveClient: true
           })
         }
       })
   }
 
-  _renderMessages(){
-    return(
-    <div>
-      <Message
-        error
-        hidden={!this.state.error}
-        header='Erro'
-        content='Houve um erro ao tentar listar as espécies'
-      />
+  _renderMessages() {
+    return (
+      <div>
         <Message
           error
-          hidden={!this.state.errorRemoveSpecies}
+          hidden={!this.state.error}
           header='Erro'
-          content='Houve um erro ao tentar remover uma espécie'
+          content='Houve um erro ao tentar listar os clientes'
+        />
+        <Message
+          error
+          hidden={!this.state.errorRemoveClient}
+          header='Erro'
+          content='Houve um erro ao tentar remover um cliente'
         />
         <Message
           success
-          hidden={!this.state.successRemoveSpecies}
+          hidden={!this.state.successRemoveClient}
           header='Sucesso'
-          content='Espécie removida com sucesso'
+          content='Cliente removido com sucesso'
         />
       </div>
     )
   }
 
-  _renderModal(){
-    return(
+  _renderModal() {
+    return (
       <Modal
         open={this.state.modalOpen}
         onClose={this._handleClose}
         basic
         size='small'
       >
-        <Header icon='remove circle' content='Remover Espécie' />
+        <Header icon='remove circle' content='Remover Cliente' />
         <Modal.Content>
-          <h3>Tem certeza que deseja remover essa espécie?</h3>
+          <h3>Tem certeza que deseja remover esse cliente?</h3>
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={this.handleRemoveSpecie} inverted>
+          <Button color='green' onClick={this.handleRemoveClient} inverted>
             <Icon name='checkmark' /> Sim
               </Button>
           <Button color='red' onClick={this._handleClose} inverted>
@@ -175,7 +179,7 @@ class ListSpecies extends Component {
       <div>
         {this._renderMessages()}
         <Segment>
-          <Dimmer 
+          <Dimmer
             disabled={!this.state.fetching}
             active={this.state.fetching}
           >
@@ -190,4 +194,4 @@ class ListSpecies extends Component {
   }
 }
 
-export default ListSpecies;
+export default ListClients;

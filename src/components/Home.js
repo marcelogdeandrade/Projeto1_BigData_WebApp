@@ -10,6 +10,8 @@ import MedicinesPets from './relmedicinespets/MedicinesPets'
 import AddIllness from './illnesses/AddIllness'
 import ListIllnesses from './illnesses/ListIllnesses'
 import IllnessesPets from './relillnessespets/IllnessesPets'
+import AddClient from './clients/AddClient'
+import ListClients from './clients/ListClients'
 
 class Home extends Component {
   state = {}
@@ -56,6 +58,14 @@ class Home extends Component {
     } if (this.state.activeItem === 'list_illnesses_pets') {
       return (
         <IllnessesPets />
+      )
+    } if (this.state.activeItem === 'add_client') {
+      return (
+        <AddClient />
+      )
+    } if (this.state.activeItem === 'list_clients') {
+      return (
+        <ListClients />
       )
     } 
   }

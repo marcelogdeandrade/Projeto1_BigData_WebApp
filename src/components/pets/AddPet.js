@@ -18,7 +18,8 @@ import moment from 'moment';
 import { 
   addPet, 
   getMedicines,
-  getSpecies
+  getSpecies,
+  getClients
 } from '../../modules/Controller'
 
 
@@ -34,6 +35,7 @@ class AddPet extends Component {
       errorSpecies: false,
       errorClients: false,
       species: [],
+      clients: [],
       birthDate: moment()
     }
     this._handleChangeDate = this._handleChangeDate.bind(this)
@@ -60,20 +62,19 @@ class AddPet extends Component {
         }
       })
     this.setState({
-      fetchingSpecies: true
+      fetchingClients: true
     })
-    //Fazer isso
     getClients()
       .then(result => {
         if (result.problem) {
           this.setState({
-            error: true,
+            errorClients: true,
             fetchingClients: false
           })
         } else {
           this.setState({
-            error: false,
-            species: result.data,
+            errorClients: false,
+            clients: result.data,
             fetchingClients: false
           })
         }
@@ -86,6 +87,20 @@ class AddPet extends Component {
       const obj = {
         key: item.idSpecies.toString(),
         value: item.idSpecies.toString(),
+        text: item.name
+      }
+      result.push(obj)
+      return item
+    });
+    return result
+  }
+
+  _formatClientsList(clients) {
+    let result = []
+    clients.map(item => {
+      const obj = {
+        key: item.idClient.toString(),
+        value: item.idClient.toString(),
         text: item.name
       }
       result.push(obj)
@@ -154,6 +169,12 @@ class AddPet extends Component {
           header='Erro'
           content='Houve um erro ao listar as espécies'
         />
+        <Message
+          error
+          hidden={!this.state.errorClients}
+          header='Erro'
+          content='Houve um erro ao listar os clientes'
+        />
       </div>
     )
   }
@@ -161,7 +182,7 @@ class AddPet extends Component {
   _renderForm() {
     // Options de teste
     let species = this._formatSpeciesList(this.state.species)
-    const clients = [{ key: 'Marcelo', value: 'Marcelo', text: 'Marcelo' }, { key: 'Gabi', value: 'Gabi', text: 'Gabi' }]
+    const clients = this._formatClientsList(this.state.clients)
     //
     return (
       <Form
@@ -188,7 +209,7 @@ class AddPet extends Component {
         <Form.Field
         >
           <label>Cliente</label>
-          <Select placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
+          <Select loading={this.state.fetchingClients} placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
         </Form.Field>
         {/* Data de Nascimento */}
         <Form.Field

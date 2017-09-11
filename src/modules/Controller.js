@@ -135,3 +135,25 @@ export const removeIllnessPet = async (idIllnessPet, idIllness, idPet) => {
     .delete('/relillnessespets', { idIllnessPet: idIllnessPet, idIllness: idIllness, idPet: idPet })
     .then((response) => response)
 }
+
+
+/**
+ * Clients
+ */
+export const getClients = async () => {
+  return api
+    .get('/clients')
+    .then((response) => response)
+}
+
+export const addClient = async (name, birthDate) => {
+  return api
+    .post('/clients', { name: name, birthDate: birthDate })
+    .then((response) => response)
+}
+
+export const removeClient = async (idClient) => {
+  return api
+    .delete('/clients', { idClient: idClient })
+    .then((response) => response)
+}
