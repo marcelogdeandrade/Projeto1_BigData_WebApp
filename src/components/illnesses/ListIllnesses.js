@@ -1,35 +1,35 @@
 import React, { Component } from 'react';
-import { 
-  Icon, 
-  Label, 
-  Menu, 
-  Table, 
-  Message, 
-  Dimmer, 
-  Loader, 
-  Image, 
+import {
+  Icon,
+  Label,
+  Menu,
+  Table,
+  Message,
+  Dimmer,
+  Loader,
+  Image,
   Segment,
   Button,
   Modal,
-  Header 
+  Header
 } from 'semantic-ui-react'
 
-import { 
-  getMedicines,
-  removeMedicine
+import {
+  getIllnesses,
+  removeIllness
 } from '../../modules/Controller'
 
 
-class ListMedicines extends Component {
+class ListIllnesses extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      medicines: [],
+      illnesses: [],
       fetching: false,
       error: false,
-      errorRemoveMedicine: false,
-      successRemoveMedicine: false,
+      errorRemoveIllness: false,
+      successRemoveIllness: false,
       modalOpen: false
     }
   }
@@ -43,7 +43,7 @@ class ListMedicines extends Component {
     this.setState({
       fetching: true
     })
-    getMedicines()
+    getIllnesses()
       .then(result => {
         if (result.problem) {
           this.setState({
@@ -53,18 +53,27 @@ class ListMedicines extends Component {
         } else {
           this.setState({
             error: false,
-            medicines: result.data,
+            illnesses: result.data,
             fetching: false
           })
         }
       })
   }
 
-  _renderRow(id, name, quantity) {
+  _formatIsContagious(isContagious){
+    if (isContagious){
+      return 'Sim'
+    } else {
+      return 'Não'
+    }
+  }
+  
+  _renderRow(id, name, isContagious) {
     return (
       <Table.Row>
         <Table.Cell>{id}</Table.Cell>
         <Table.Cell>{name}</Table.Cell>
+        <Table.Cell>{this._formatIsContagious(isContagious)}</Table.Cell>
         <Table.Cell textAlign={'center'}>
           <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
         </Table.Cell>
@@ -80,13 +89,14 @@ class ListMedicines extends Component {
           <Table.Row>
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Nome</Table.HeaderCell>
+            <Table.HeaderCell>Contagiosa</Table.HeaderCell>
             <Table.HeaderCell width={1}></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {this.state.medicines.map(medicine => {
-            return this._renderRow(medicine.idMedicine, medicine.name, medicine.pets)
+          {this.state.illnesses.map(illness => {
+            return this._renderRow(illness.idIllness, illness.name, illness.isContagious)
           })}
         </Table.Body>
 
@@ -94,33 +104,33 @@ class ListMedicines extends Component {
     )
   }
 
-  _renderMessages(){
-    return(
+  _renderMessages() {
+    return (
       <div>
         <Message
           error
           hidden={!this.state.error}
           header='Erro'
-          content='Houve um erro ao tentar listar os remédios'
+          content='Houve um erro ao tentar listar as doenças'
         />
         <Message
           error
-          hidden={!this.state.errorRemoveMedicine}
+          hidden={!this.state.errorRemoveIllness}
           header='Erro'
-          content='Houve um erro ao tentar remover um remédio'
+          content='Houve um erro ao tentar remover uma doença'
         />
         <Message
           success
-          hidden={!this.state.successRemoveMedicine}
+          hidden={!this.state.successRemoveIllness}
           header='Sucesso'
-          content='Remédio removida com sucesso'
+          content='Doença removida com sucesso'
         />
       </div>
     )
   }
 
-  handleRemoveMedicine = () => {
-    removeMedicine(this.state.selectedMedicine)
+  handleRemoveIllness = () => {
+    removeIllness(this.state.selectedIllness)
       .then(result => {
         this.setState({
           fetching: false,
@@ -129,11 +139,11 @@ class ListMedicines extends Component {
         console.log(result)
         if (!result.problem) {
           this.setState({
-            successRemoveMedicine: true
+            successRemoveIllness: true
           })
         } else {
           this.setState({
-            errorRemoveMedicine: true
+            errorRemoveIllness: true
           })
         }
       })
@@ -143,7 +153,7 @@ class ListMedicines extends Component {
 * Handlers do modal
 * @memberof ListSpecies
 */
-  _handleOpen = (id) => this.setState({ selectedMedicine: id, modalOpen: true })
+  _handleOpen = (id) => this.setState({ selectedIllness: id, modalOpen: true })
 
   _handleClose = () => this.setState({ modalOpen: false })
 
@@ -155,12 +165,12 @@ class ListMedicines extends Component {
         basic
         size='small'
       >
-        <Header icon='remove circle' content='Remover Pet' />
+        <Header icon='remove circle' content='Remover Doença' />
         <Modal.Content>
-          <h3>Tem certeza que deseja remover esse Pet?</h3>
+          <h3>Tem certeza que deseja remover essa doença?</h3>
         </Modal.Content>
         <Modal.Actions>
-          <Button color='green' onClick={this.handleRemoveMedicine} inverted>
+          <Button color='green' onClick={this.handleRemoveIllness} inverted>
             <Icon name='checkmark' /> Sim
               </Button>
           <Button color='red' onClick={this._handleClose} inverted>
@@ -180,7 +190,7 @@ class ListMedicines extends Component {
             disabled={!this.state.fetching}
             active={this.state.fetching}
           >
-            <Loader/>
+            <Loader />
           </Dimmer>
           {this._renderTable()}
         </Segment>
@@ -191,4 +201,4 @@ class ListMedicines extends Component {
   }
 }
 
-export default ListMedicines;
+export default ListIllnesses;

@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
-import { Menu, Segment } from 'semantic-ui-react'
+import { Menu, Segment, Dropdown } from 'semantic-ui-react'
 import AddSpecies from './species/AddSpecies'
 import ListSpecies from './species/ListSpecies'
 import ListPets from './pets/ListPets'
 import AddPet from './pets/AddPet'
 import ListMedicies from './medicines/ListMedicines'
 import AddMedicine from './medicines/AddMedicine'
+import MedicinesPets from './relmedicinespets/MedicinesPets'
+import AddIllness from './illnesses/AddIllness'
+import ListIllnesses from './illnesses/ListIllnesses'
+import IllnessesPets from './relillnessespets/IllnessesPets'
 
 class Home extends Component {
   state = {}
@@ -37,6 +41,22 @@ class Home extends Component {
       return (
         <AddMedicine />
       )
+    } if (this.state.activeItem === 'list_medicines_pets') {
+      return (
+        <MedicinesPets />
+      )
+    } if (this.state.activeItem === 'add_illness') {
+      return (
+        <AddIllness />
+      )
+    } if (this.state.activeItem === 'list_illnesses') {
+      return (
+        <ListIllnesses />
+      )
+    } if (this.state.activeItem === 'list_illnesses_pets') {
+      return (
+        <IllnessesPets />
+      )
     } 
   }
 
@@ -46,29 +66,44 @@ class Home extends Component {
     return (
       <Segment>
         <Menu>
-          <Menu.Item name='list_species' active={activeItem === 'list_species'} onClick={this.handleItemClick}>
-            Listar Espécies
-          </Menu.Item>
+          <Dropdown item text='Espécies'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='list_species' onClick={this.handleItemClick}>Listar Espécies</Dropdown.Item>
+              <Dropdown.Item name='add_species' onClick={this.handleItemClick}>Adicionar Espécie</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
-          <Menu.Item name='add_species' active={activeItem === 'add_species'} onClick={this.handleItemClick}>
-            Adicionar Espécie
-          </Menu.Item>
+          <Dropdown item text='Pets'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='list_pets' onClick={this.handleItemClick}>Listar Pets</Dropdown.Item>
+              <Dropdown.Item name='add_pet' onClick={this.handleItemClick}>Adicionar Pet</Dropdown.Item>
+              <Dropdown.Item name='list_medicines_pets' onClick={this.handleItemClick}>Cartela de Remédios</Dropdown.Item>
+              <Dropdown.Item name='list_illnesses_pets' onClick={this.handleItemClick}>Cartela de Doenças</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
-          <Menu.Item name='list_pets' active={activeItem === 'list_pets'} onClick={this.handleItemClick}>
-            Listar Pets
-          </Menu.Item>
+          <Dropdown item text='Remédios'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='list_medicines' onClick={this.handleItemClick}>Listar Remédios</Dropdown.Item>
+              <Dropdown.Item name='add_medicine' onClick={this.handleItemClick}>Adicionar Remédio</Dropdown.Item>
+              <Dropdown.Item name='list_medicines_pets' onClick={this.handleItemClick}>Cartela de Remédios</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
-          <Menu.Item name='add_pet' active={activeItem === 'add_pet'} onClick={this.handleItemClick}>
-            Adicionar Pet
-          </Menu.Item>
+          <Dropdown item text='Doenças'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='add_illness' onClick={this.handleItemClick}>Adicionar Doença</Dropdown.Item>
+              <Dropdown.Item name='list_illnesses' onClick={this.handleItemClick}>Listar Doenças</Dropdown.Item>
+              <Dropdown.Item name='list_illnesses_pets' onClick={this.handleItemClick}>Cartela de Doenças</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
-          <Menu.Item name='list_medicines' active={activeItem === 'list_medicines'} onClick={this.handleItemClick}>
-            Listar Remédios
-          </Menu.Item>
-
-          <Menu.Item name='add_medicine' active={activeItem === 'add_medicine'} onClick={this.handleItemClick}>
-            Adicionar Remédio
-          </Menu.Item>
+          <Dropdown item text='Clientes'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='list_clients' onClick={this.handleItemClick}>Listar Clientes</Dropdown.Item>
+              <Dropdown.Item name='add_client' onClick={this.handleItemClick}>Adicionar Cliente</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
         </Menu>
         {this._renderContent()}

@@ -17,7 +17,8 @@ import moment from 'moment';
 
 import { 
   addPet, 
-  getMedicines
+  getMedicines,
+  getSpecies
 } from '../../modules/Controller'
 
 
@@ -26,10 +27,71 @@ class AddPet extends Component {
     super(props)
     this.state = {
       fetching: false,
+      fetchingSpecies: false,
+      fetchingClients: false,
       success: false,
       error: false,
+      errorSpecies: false,
+      errorClients: false,
+      species: [],
       birthDate: moment()
     }
+    this._handleChangeDate = this._handleChangeDate.bind(this)
+    this._renderForm = this._renderForm.bind(this)
+  }
+
+  componentDidMount() {
+    this.setState({
+      fetchingSpecies: true
+    })
+    getSpecies()
+      .then(result => {
+        if (result.problem) {
+          this.setState({
+            errorSpecies: true,
+            fetchingSpecies: false
+          })
+        } else {
+          this.setState({
+            errorSpecies: false,
+            species: result.data,
+            fetchingSpecies: false
+          })
+        }
+      })
+    this.setState({
+      fetchingSpecies: true
+    })
+    //Fazer isso
+    getClients()
+      .then(result => {
+        if (result.problem) {
+          this.setState({
+            error: true,
+            fetchingClients: false
+          })
+        } else {
+          this.setState({
+            error: false,
+            species: result.data,
+            fetchingClients: false
+          })
+        }
+      })
+  }
+
+  _formatSpeciesList(species){
+    let result = []
+    species.map(item => {
+      const obj = {
+        key: item.idSpecies.toString(),
+        value: item.idSpecies.toString(),
+        text: item.name
+      }
+      result.push(obj)
+      return item
+    });
+    return result
   }
 
   /**
@@ -49,19 +111,18 @@ class AddPet extends Component {
 
   _handleChangeClient = (e, { name, value }) => this.setState({ idClient: value })
 
-  _handleChangeMedicines = (e, { name, value }) => this.setState({ medicines: value })
-
   /******/
 
   handleSubmit = () => {
-    let { name, idSpecies, idClient, birthDate, medicines } = this.state
-    birthDate = moment(birthDate).format('DD-MM-YYYY')
+    let { name, idSpecies, idClient, birthDate } = this.state
+    birthDate = moment(birthDate).format('YYYY-MM-DD')
     this.setState({ fetching: true })
     addPet(name, idSpecies, idClient, birthDate)
       .then(result => {
         this.setState({
           fetching: false
         })
+        console.log(result)
         if (!result.problem) {
           this.setState({
             success: true
@@ -79,23 +140,28 @@ class AddPet extends Component {
       <div>
         <Message
           success
-          header='Espécie Adicionada'
-          content="Você adicionou uma espécie com sucesso"
+          header='Pet Adicionado'
+          content="Você adicionou um pet com sucesso"
         />
         <Message
           error
           header='Erro'
-          content='Houve um erro ao tentar adicionar uma espécie'
+          content='Houve um erro ao tentar adicionar um pet'
+        />
+        <Message
+          error
+          hidden={!this.state.errorSpecies}
+          header='Erro'
+          content='Houve um erro ao listar as espécies'
         />
       </div>
     )
   }
+
   _renderForm() {
-    
     // Options de teste
-    const species = [{ key: 'Cachorro', value: 'Cachorro', text: 'Cachorro' }, { key: 'Gato', value: 'Gato', text: 'Gato' }]
+    let species = this._formatSpeciesList(this.state.species)
     const clients = [{ key: 'Marcelo', value: 'Marcelo', text: 'Marcelo' }, { key: 'Gabi', value: 'Gabi', text: 'Gabi' }]
-    const medicines = [{ key: 'Vacina', value: 'Vacina', text: 'Vacina' }, { key: 'Pilula', value: 'Pilula', text: 'Pilula' }]
     //
     return (
       <Form
@@ -116,19 +182,13 @@ class AddPet extends Component {
           required
         >
           <label>Espécie</label>
-          <Select placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
+          <Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
         </Form.Field>
         {/* Cliente */}
         <Form.Field
         >
           <label>Cliente</label>
           <Select placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
-        </Form.Field>
-        {/* Remédios */}
-        <Form.Field
-        >
-          <label>Remédios</label>
-          <Dropdown placeholder='Remédios' onChange={this._handleChangeMedicines} fluid multiple selection options={medicines} />
         </Form.Field>
         {/* Data de Nascimento */}
         <Form.Field

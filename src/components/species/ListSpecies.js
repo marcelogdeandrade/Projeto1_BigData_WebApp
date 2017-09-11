@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import {
   Icon, 
   Label, 
-  Menu, 
   Table, 
   Message, 
   Dimmer,
   Loader, 
-  Image,
   Segment, 
   Button, 
   Modal, 
@@ -25,7 +23,7 @@ class ListSpecies extends Component {
   constructor(props){
     super(props)
     this.state = {
-      species: [{idSpecie: '1', name: 'teste' }], //Trocar depois para array vazia
+      species: [], //Trocar depois para array vazia
       fetching: false,
       error: false,
       errorRemoveSpecies: false,
@@ -86,7 +84,7 @@ class ListSpecies extends Component {
 
         <Table.Body>
           {this.state.species.map(specie => {
-            return this._renderRow(specie.idSpecie, specie.name)
+            return this._renderRow(specie.idSpecies, specie.name)
           })}
         </Table.Body>
 
@@ -138,7 +136,7 @@ class ListSpecies extends Component {
           content='Houve um erro ao tentar remover uma espécie'
         />
         <Message
-          error
+          success
           hidden={!this.state.successRemoveSpecies}
           header='Sucesso'
           content='Espécie removida com sucesso'

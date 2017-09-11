@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "apisauce": "^0.14.1",
+    "cleave.js": "^1.0.1",
     "express": "^4.15.4",
     "moment": "^2.18.1",
     "razzle": "^0.7.6-rc2",

@@ -22,8 +22,8 @@ export const addSpecies = async (name) => {
 }
 
 export const removeSpecies = async (idSpecies) => {
-  return api
-    .delete('/species', { idSpecies: idSpecies })
+    return api
+    .delete('/species', {idSpecies: idSpecies})
     .then((response) => response)
 }
 
@@ -43,6 +43,12 @@ export const addPet = async (name, idSpecies, idClient, birthDate) => {
     .then((response) => response)
 }
 
+export const removePet = async (idPet) => {
+  return api
+    .delete('/pets', { idPet: idPet })
+    .then((response) => response)
+}
+
 /**
  * Medicines
  */
@@ -53,10 +59,79 @@ export const getMedicines = async () => {
     .then((response) => response)
 }
 
-export const addMedicine = async (name, idSpecies, idClient, birthDate) => {
+export const addMedicine = async (name) => {
   return api
-    .post('/medicines', { name: name, idSpecies: idSpecies, idClient: idClient, birthDate: birthDate })
+    .post('/medicines', { name: name })
     .then((response) => response)
 }
 
+export const removeMedicine = async (idMedicine) => {
+  return api
+    .delete('/medicines', { idMedicine: idMedicine })
+    .then((response) => response)
+}
 
+/**
+ * Rel Pets Medicines
+ */
+
+export const getMedicinesPets = async () => {
+  return api
+    .get('/relpetsmedicines')
+    .then((response) => response)
+}
+
+export const addMedicineToPet = async (idMedicine, quantity, idPet) => {
+  return api
+    .post('/relpetsmedicines', { idMedicine: idMedicine, quantity: quantity, idPet: idPet })
+    .then((response) => response)
+}
+
+export const removeMedicinePet = async (idMedicinePet, idMedicine, idPet) => {
+  return api
+    .delete('/relpetsmedicines', { idMedicinePet: idMedicinePet ,idMedicine: idMedicine, idPet: idPet})
+    .then((response) => response)
+}
+
+/**
+ * Illness
+ */
+export const getIllnesses = async () => {
+  return api
+    .get('/illnesses')
+    .then((response) => response)
+}
+
+export const addIllness = async (name, contagious) => {
+  return api
+    .post('/illnesses', { name: name, contagious: contagious})
+    .then((response) => response)
+}
+
+export const removeIllness = async (idIllness) => {
+  return api
+    .delete('/illnesses', { idIllness: idIllness })
+    .then((response) => response)
+}
+
+/**
+ * Rel Pets Illnesses
+ */
+
+export const getIllnessesPets = async () => {
+  return api
+    .get('/relillnessespets')
+    .then((response) => response)
+}
+
+export const addIllnessToPet = async (idIllness, idPet) => {
+  return api
+    .post('/relillnessespets', { idIllness: idIllness, idPet: idPet })
+    .then((response) => response)
+}
+
+export const removeIllnessPet = async (idIllnessPet, idIllness, idPet) => {
+  return api
+    .delete('/relillnessespets', { idIllnessPet: idIllnessPet, idIllness: idIllness, idPet: idPet })
+    .then((response) => response)
+}

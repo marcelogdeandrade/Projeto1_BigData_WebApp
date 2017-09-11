@@ -1,31 +1,32 @@
 import React, { Component } from 'react';
-import { 
-  Button, 
-  Checkbox, 
-  Form, 
-  Message, 
-  Dimmer, 
-  Loader, 
-  Segment, 
-  Select, 
-  Dropdown, 
-  Input, 
-  Grid 
+import {
+  Button,
+  Checkbox,
+  Form,
+  Message,
+  Dimmer,
+  Loader,
+  Segment,
+  Select,
+  Dropdown,
+  Input,
+  Grid
 } from 'semantic-ui-react'
 
-import { 
-  addMedicine, 
-  getPets 
+import {
+  addIllness,
+  getPets
 } from '../../modules/Controller'
 
 
-class AddMedicine extends Component {
+class AddIllness extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fetching: false,
       success: false,
       error: false,
+      isContagious: false,
     }
   }
 
@@ -36,17 +37,21 @@ class AddMedicine extends Component {
    */
   _handleChangeName = (e, { name, value }) => this.setState({ name: value })
 
+  _handleChangeContagious = (e, data) => this.setState({ isContagious: data.checked })
+
 
   /*********/
 
   handleSubmit = () => {
-    let { name } = this.state
+    let { name, isContagious} = this.state
+    console.log(isContagious)
     this.setState({ fetching: true })
-    addMedicine(name)
+    addIllness(name, + isContagious)
       .then(result => {
         this.setState({
           fetching: false
         })
+        console.log(result)
         if (!result.problem) {
           this.setState({
             success: true
@@ -59,29 +64,24 @@ class AddMedicine extends Component {
       })
   }
 
-  _renderMessages(){
-    return(
+  _renderMessages() {
+    return (
       <div>
         <Message
           success
-          header='Remédio Adicionado'
-          content="Você adicionou um remédio com sucesso"
+          header='Doença Adicionada'
+          content="Você adicionou uma doença com sucesso"
         />
         <Message
           error
           header='Erro'
-          content='Houve um erro ao tentar adicionar um remédio'
+          content='Houve um erro ao tentar adicionar uma doença'
         />
       </div>
     )
   }
   _renderForm() {
 
-    // Options de teste
-    const units = [
-      { key: 'ml', text: 'ml', value: 'ml' },
-      { key: 'g', text: 'g', value: 'g' },
-    ]
     return (
       <Form
         loading={this.state.fetching}
@@ -96,8 +96,14 @@ class AddMedicine extends Component {
           <label>Nome</label>
           <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
+        <Form.Field
+          required
+        >
+          <label>Contagiosa</label>
+          <Checkbox toggle onChange={this._handleChangeContagious}/>
+        </Form.Field>
         {this._renderMessages()}
-        <Button type='submit'>Adicionar Remédio</Button>
+        <Button type='submit'>Adicionar Doença</Button>
       </Form>
     )
   }
@@ -117,4 +123,4 @@ class AddMedicine extends Component {
   }
 }
 
-export default AddMedicine;
+export default AddIllness;
