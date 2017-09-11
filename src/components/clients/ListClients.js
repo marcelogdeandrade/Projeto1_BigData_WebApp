@@ -17,6 +17,7 @@ import {
   removeClient
 } from '../../modules/Controller'
 
+import moment from 'moment'
 
 class ListClients extends Component {
 

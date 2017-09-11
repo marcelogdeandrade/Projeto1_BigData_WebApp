@@ -131,6 +131,9 @@ class AddPet extends Component {
   handleSubmit = () => {
     let { name, idSpecies, idClient, birthDate } = this.state
     birthDate = moment(birthDate).format('YYYY-MM-DD')
+    if (!idClient){
+      idClient = null
+    }
     this.setState({ fetching: true })
     addPet(name, idSpecies, idClient, birthDate)
       .then(result => {

@@ -53,7 +53,7 @@ class ListPets extends Component {
   }
 
   /**
-   * Requisição REST de todos os Pets
+   * Requisição REST de todos os Pets, Medicines e Illnesses
    * 
    * @memberof ListPets
    */
