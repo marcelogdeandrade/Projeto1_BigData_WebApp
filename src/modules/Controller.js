@@ -157,3 +157,24 @@ export const removeClient = async (idClient) => {
     .delete('/clients', { idClient: idClient })
     .then((response) => response)
 }
+
+/**
+ * Foods
+ */
+export const getFoods = async () => {
+  return api
+    .get('/foods')
+    .then((response) => response)
+}
+
+export const addFood = async (name, idSpecies, quantity) => {
+  return api
+    .post('/foods', { name: name, idSpecies: idSpecies, quantity: quantity })
+    .then((response) => response)
+}
+
+export const removeFood = async (idFood) => {
+  return api
+    .delete('/clients', { idFood: idFood })
+    .then((response) => response)
+}

@@ -12,6 +12,7 @@ import ListIllnesses from './illnesses/ListIllnesses'
 import IllnessesPets from './relillnessespets/IllnessesPets'
 import AddClient from './clients/AddClient'
 import ListClients from './clients/ListClients'
+import AddFood from './foods/AddFood'
 
 class Home extends Component {
   state = {}
@@ -67,7 +68,11 @@ class Home extends Component {
       return (
         <ListClients />
       )
-    } 
+    } if (this.state.activeItem === 'add_food') {
+      return (
+        <AddFood />
+      )
+    }
   }
 
   render() {
@@ -112,6 +117,12 @@ class Home extends Component {
             <Dropdown.Menu>
               <Dropdown.Item name='list_clients' onClick={this.handleItemClick}>Listar Clientes</Dropdown.Item>
               <Dropdown.Item name='add_client' onClick={this.handleItemClick}>Adicionar Cliente</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <Dropdown item text='Comidas'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='add_food' onClick={this.handleItemClick}>Adicionar Comida</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 
