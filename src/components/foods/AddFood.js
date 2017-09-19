@@ -177,7 +177,7 @@ class AddFood extends Component {
         <Form.Field
           required
         >
-          <label>Quantidade</label>
+          <label>Quantidade(g)</label>
           <Form.Input defaultValue={this.props.quantity} placeholder='Quantidade' name='quantidade' onChange={this._handleChangeQuantity} />
         </Form.Field>
         <Button type='submit'>{this.props.isEditing ? 'Atualizar Comida' : 'Adicionar Comida'}</Button>

@@ -86,7 +86,7 @@ class ListFoods extends Component {
            <Table.HeaderCell>Id</Table.HeaderCell>
            <Table.HeaderCell>Nome</Table.HeaderCell>
            <Table.HeaderCell>Espécie</Table.HeaderCell>
-           <Table.HeaderCell>Quantidade</Table.HeaderCell>
+           <Table.HeaderCell>Quantidade(g)</Table.HeaderCell>
            <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
            <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
          </Table.Row>

@@ -231,8 +231,14 @@ export const addFoodLog = async (idFood, isIn, idClient, idPet, quantity) => {
     .then((response) => response)
 }
 
-export const removeFoodLog = async (idFood) => {
+export const updateFoodLog = async (idFoodlog, idFood, isIn, idClient, idPet, quantity) => {
   return api
-    .delete('/foodlog', { idFoodLog: idFoodLog})
+    .put('/foodlog', { idFoodlog: idFoodlog, idFood: idFood, isIn: isIn, idClient: idClient, idPet: idPet, quantity: quantity })
+    .then((response) => response)
+}
+
+export const removeFoodLog = async (idFoodlog) => {
+  return api
+    .delete('/foodlog', { idFoodlog: idFoodlog})
     .then((response) => response)
 }

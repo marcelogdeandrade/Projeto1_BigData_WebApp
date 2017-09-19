@@ -354,10 +354,6 @@ class ListPets extends Component {
   _handleCloseAddMedicine = () => this.setState({ modalAddMedicineOpen: false })
 
   _renderAddMedicine() {
-    const optionsQuantity = [
-      { key: 'g', text: 'g', value: 'g' },
-      { key: 'ml', text: 'ml', value: 'ml' },
-    ]
     return (
       <Modal
         open={this.state.modalAddMedicineOpen}
@@ -382,10 +378,9 @@ class ListPets extends Component {
               required
             >
             <Input
-                label={<Dropdown defaultValue='g' options={optionsQuantity} />}
                 labelPosition='right'
                 onChange={this._handleChangeQuantity}
-                placeholder='Quantidade'
+                placeholder='Quantidade(g)'
               />
             </Form.Field>
           </Form>

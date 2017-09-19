@@ -17,6 +17,8 @@ import {
   removeFoodLog
 } from '../../modules/Controller'
 
+import AddFoodLog from './AddFoodLog'
+
 import moment from 'moment'
 
 class ListFoodLog extends Component {
@@ -24,7 +26,7 @@ class ListFoodLog extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      foodLog: [],
+      foodlog: [],
       fetching: false,
       error: false,
       errorRemoveFoodLog: false,
@@ -67,7 +69,7 @@ class ListFoodLog extends Component {
    }
  }
 
- _renderRow(id, nameFood, isIn, nameClient, namePet, quantity) {
+ _renderRow(id, nameFood, isIn, nameClient, namePet, quantity, idClient, idPet, idFood) {
    return (
      <Table.Row>
        <Table.Cell>{id}</Table.Cell>
@@ -76,6 +78,9 @@ class ListFoodLog extends Component {
        <Table.Cell>{nameClient}</Table.Cell>
        <Table.Cell>{namePet}</Table.Cell>
        <Table.Cell>{quantity}</Table.Cell>
+       <Table.Cell textAlign={'center'}>
+         <Button icon='edit' onClick={() => this._handleEditFoodlog(id, nameFood, idFood, isIn, idClient, idPet, quantity)} />
+       </Table.Cell>
        <Table.Cell textAlign={'center'}>
          <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
        </Table.Cell>
@@ -94,19 +99,40 @@ class ListFoodLog extends Component {
            <Table.HeaderCell>Entrada ou Saída</Table.HeaderCell>
            <Table.HeaderCell>Nome Doador</Table.HeaderCell>
            <Table.HeaderCell>Pet Consumidor</Table.HeaderCell>
-           <Table.HeaderCell>Quantidade</Table.HeaderCell>
-           <Table.HeaderCell width={1}></Table.HeaderCell>
+           <Table.HeaderCell>Quantidade(g)</Table.HeaderCell>
+           <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+           <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
          </Table.Row>
        </Table.Header>
 
        <Table.Body>
          {this.state.foodlog.map(foodlog => {
-           return this._renderRow(foodlog.idFoodLog, foodlog.nameFood, foodlog.isIn, foodlog.nameClient, foodlog.namePet, foodlog.quantity)
+           return this._renderRow(foodlog.idFoodlog, foodlog.nameFood, foodlog.isIn, foodlog.nameClient, foodlog.namePet, foodlog.quantity, foodlog.idClient, foodlog.idPet, foodlog.idFood)
          })}
        </Table.Body>
 
      </Table>
    )
+ }
+
+ _handleEditFoodlog = (id, name, idFood, isIn, idClient, idPet, quantity) => {
+   this.setState({
+     isEditing: true,
+     name: name,
+     id: id,
+     isIn: isIn,
+     idClient: idClient,
+     idPet: idPet,
+     quantity: quantity,
+     idFood: idFood
+   })
+ }
+
+ _handleBack = () => {
+   this.setState({
+     isEditing: false
+   })
+   this.componentDidMount()
  }
 
 
@@ -125,6 +151,7 @@ class ListFoodLog extends Component {
          fetching: false,
          modalOpen: false
        })
+       console.log(result)
        if (!result.problem) {
          this.setState({
            successRemoveFoodLog: true
@@ -187,6 +214,20 @@ class ListFoodLog extends Component {
    }
 
    render() {
+     if (this.state.isEditing) {
+       return (
+         <AddFoodLog
+           isEditing={true}
+           idClient={this.state.idClient}
+           idPet={this.state.idPet}
+           idFood={this.state.idFood}
+           quantity={this.state.quantity}
+           isIn={!!this.state.isIn}
+           id={this.state.id}
+           back={this._handleBack}
+         />
+       )
+     }
      return (
        <div>
          {this._renderMessages()}

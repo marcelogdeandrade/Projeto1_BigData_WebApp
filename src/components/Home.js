@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu, Segment, Dropdown } from 'semantic-ui-react'
+import { Menu, Segment, Dropdown, Header, Icon } from 'semantic-ui-react'
 import AddSpecies from './species/AddSpecies'
 import ListSpecies from './species/ListSpecies'
 import ListPets from './pets/ListPets'
@@ -15,6 +15,7 @@ import ListClients from './clients/ListClients'
 import AddFood from './foods/AddFood'
 import ListFood from './foods/ListFoods'
 import AddFoodLog from './foodlog/AddFoodLog'
+import ListFoodLog from './foodlog/ListFoodLog'
 
 class Home extends Component {
   state = {}
@@ -93,6 +94,16 @@ class Home extends Component {
     const { activeItem } = this.state
 
     return (
+      <div>
+      <Segment clearing>
+        <Header as='h2' floated='right'>
+            <Icon name='paw'/>
+            <Icon name='home' />
+        </Header>
+            <Header as='h1' floated='left'>
+              Ong Animais
+        </Header>
+      </Segment>
       <Segment>
         <Menu>
           <Dropdown item text='Espécies'>
@@ -151,6 +162,7 @@ class Home extends Component {
         </Menu>
         {this._renderContent()}
       </Segment>
+      </div>
     )
   }
 }

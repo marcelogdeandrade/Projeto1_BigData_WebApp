@@ -17,7 +17,8 @@ import {
   addFoodLog,
   getPets,
   getClients,
-  getFoods
+  getFoods,
+  updateFoodLog
 }from '../../modules/Controller'
 
 
@@ -32,10 +33,14 @@ class AddFoodLog extends Component {
       success: false,
       error: false,
       errorSpecies:false,
-      isIn: true,
+      isIn: props.isIn || true,
       pets:[],
       clients:[],
-      foods: []
+      foods: [],
+      idFood: props.idFood,
+      idPet: props.idPet,
+      idClient: props.idClient,
+      quantity: props.quantity
     }
     this._renderForm = this._renderForm.bind(this)
   }
@@ -158,22 +163,42 @@ class AddFoodLog extends Component {
     */
    handleSubmit = () => {
      let{ idFood, isIn, idClient, idPet, quantity} = this.state
-     addFoodLog(idFood, isIn, idClient, idPet, quantity)
-       .then(result => {
-         this.setState({
-           fetching: false
+     const idFoodlog = this.props.id
+     if (this.props.isEditing) {
+       updateFoodLog(idFoodlog, String(idFood), + isIn, String(idClient), String(idPet), quantity)
+         .then(result => {
+           this.setState({
+             fetching: false
+           })
+           console.log(result)
+           if (!result.problem) {
+             this.setState({
+               success: true
+             })
+           } else {
+             this.setState({
+               error: true
+             })
+           }
          })
-         console.log(result)
-         if (!result.problem) {
-           this.setState({
-             success: true
-           })
-         } else {
-           this.setState({
-             error: true
-           })
-         }
-       })
+     } else {
+      addFoodLog(idFood, isIn, idClient, idPet, quantity)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+      }
    }
 
    _renderMessages(){
@@ -181,13 +206,27 @@ class AddFoodLog extends Component {
        <div>
          <Message
            success
+           hidden={!this.state.success}
            header='Historico Adicionada'
            content="Você adicionou uma histórico com sucesso"
         />
          <Message
            error
+           hidden={!this.state.error}
            header='Erro'
            content='Houve um erro ao tentar adicionar um histórico'
+         />
+         <Message
+           success
+           hidden={!this.state.successUpdate}
+           header='Espécie Atualizada'
+           content="Você atualizou uma espécie com sucesso"
+         />
+         <Message
+           error
+           hidden={!this.state.errorUpdate}
+           header='Erro'
+           content='Houve um erro ao tentar atualizar uma espécie'
          />
        </div>
      )
@@ -201,18 +240,16 @@ class AddFoodLog extends Component {
      return (
        <Form
          loading={this.state.fetching}
-         success={this.state.success}
-         error={this.state.error}
          onSubmit={this.handleSubmit}
        >
          <Form.Field
            required
          >
            <label>Comida</label>
-           <Select loading={this.state.fetchingFoods}placeholder='Comida' options={foods} onChange={this._handleChangeFood} />
+           <Select defaultValue={String(this.props.idFood)} loading={this.state.fetchingFoods} placeholder='Comida' options={foods} onChange={this._handleChangeFood} />
          </Form.Field>
          <Form.Field>
-            A comida está:: <b>{this.state.value}</b>
+            A comida está: <b>{this.state.value}</b>
         </Form.Field>
         <Form.Field>
           <Checkbox
@@ -237,27 +274,25 @@ class AddFoodLog extends Component {
          <Form.Field
          >
            <label>Pet</label>
-           <Select loading={this.state.fetchingPets}placeholder='Pet' options={pets} onChange={this._handleChangePet} />
+           <Select defaultValue={String(this.props.idPet)} loading={this.state.fetchingPets} placeholder='Pet' options={pets} onChange={this._handleChangePet} />
          </Form.Field>
          <Form.Field
          >
            <label>Cliente</label>
-           <Select loading={this.state.fetchingClients} placeholder='Cliente' options={clients} onChange={this._handleChangeClient} />
+           <Select defaultValue={String(this.props.idClient)} loading={this.state.fetchingClients} placeholder='Cliente' options={clients} onChange={this._handleChangeClient} />
          </Form.Field>
          <Form.Field
            required
          >
-           <label>Quantidade</label>
-           <Form.Input placeholder='Quantidade' name='quantidade' onChange={this._handleChangeQuantity} />
+           <label>Quantidade(g)</label>
+           <Form.Input defaultValue={this.props.quantity} placeholder='Quantidade(g)' name='quantidade' onChange={this._handleChangeQuantity} />
          </Form.Field>
-         {this._renderMessages()}
-         <Button type='submit'>Adicionar Comida</Button>
+         <Button type='submit'>{this.props.isEditing ? 'Atualizar Histórico' : 'Adicionar Histórico'}</Button>
        </Form>
      )
    }
 
    render() {
-     console.log(this.state)
      return (
        <Grid>
          <Grid.Row>
@@ -265,6 +300,8 @@ class AddFoodLog extends Component {
              <Segment>
                {this._renderForm()}
              </Segment>
+             {this._renderMessages()}
+             {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
            </Grid.Column>
          </Grid.Row>
        </Grid>

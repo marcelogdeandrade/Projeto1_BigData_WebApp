@@ -84,7 +84,7 @@ class MedicinesPets extends Component {
             <Table.HeaderCell>IdMedicine</Table.HeaderCell>
             <Table.HeaderCell>Nome Pet</Table.HeaderCell>
             <Table.HeaderCell>Nome Remédio</Table.HeaderCell>
-            <Table.HeaderCell>Quantidade</Table.HeaderCell>
+            <Table.HeaderCell>Quantidade(g)</Table.HeaderCell>
             <Table.HeaderCell width={1}></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
