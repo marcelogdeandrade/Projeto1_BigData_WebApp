@@ -72,6 +72,14 @@ class Home extends Component {
       return (
         <AddFood />
       )
+    } if (this.state.activeItem === 'add_foodlog') {
+      return (
+        <AddFoodLog />
+      )
+    } if (this.state.activeItem === 'list_foodlog') {
+      return (
+        <ListFoodLog />
+      )
     }
   }
 
@@ -123,6 +131,13 @@ class Home extends Component {
           <Dropdown item text='Comidas'>
             <Dropdown.Menu>
               <Dropdown.Item name='add_food' onClick={this.handleItemClick}>Adicionar Comida</Dropdown.Item>
+              <Dropdown.Item name='list_food' onClick={this.handleItemClick}>Listar Comidas</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <Dropdown item text='Histórico de Comida'>
+            <Dropdown.Menu>
+              <Dropdown.Item name='add_foodlog' onClick={this.handleItemClick}>Adicionar Comida</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 

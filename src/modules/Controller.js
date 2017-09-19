@@ -196,12 +196,12 @@ export const getFoodLog = async () => {
 
 export const addFoodLog = async (idFood, isIn, idClient, idPet) => {
   return api
-    .post('/foodlog', { id: name, idSpecies: idSpecies, quantity: quantity })
+    .post('/foodlog', { idFood: idFood, isIn: isIn, idClient: idClient, idPet:idPet })
     .then((response) => response)
 }
 
-export const removeFood = async (idFood) => {
+export const removeFood = async (idFoodLog) => {
   return api
-    .delete('/foods', { idFood: idFood })
+    .delete('/foods', { idFoodLog: idFoodLog})
     .then((response) => response)
 }
