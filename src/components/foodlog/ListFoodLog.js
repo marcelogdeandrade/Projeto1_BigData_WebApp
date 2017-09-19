@@ -13,23 +13,22 @@ import {
 } from 'semantic-ui-react'
 
 import {
-  getFoods,
-  removeFood
+  getFoodLog,
+  removeFoodLog
 } from '../../modules/Controller'
 
-import AddFood from './AddFood'
 import moment from 'moment'
 
-class ListFoods extends Component {
+class ListFoodLog extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      foods: [],
+      foodLog: [],
       fetching: false,
       error: false,
-      errorRemoveFood: false,
-      successRemoveFood: false,
+      errorRemoveFoodLog: false,
+      successRemoveFoodLog: false,
       modalOpen: false
     }
 }
@@ -37,13 +36,13 @@ class ListFoods extends Component {
 /**
  *
  * Buscar espécies
- * @memberof ListFoods
+ * @memberof ListFoodLog
  */
  componentDidMount() {
    this.setState({
      fetching: true
    })
-   getFoods()
+   getFoodLog()
      .then(result => {
        if (result.problem) {
          this.setState({
@@ -53,23 +52,30 @@ class ListFoods extends Component {
        } else {
          this.setState({
            error: false,
-           foods: result.data,
+           foodlog: result.data,
            fetching: false
          })
        }
      })
  }
 
- _renderRow(id, nameFood, nameSpecies, quantity, idSpecies) {
+ _formatIsIn(isIn){
+   if (isIn){
+     return 'Entrou'
+   } else {
+     return 'Saiu'
+   }
+ }
+
+ _renderRow(id, nameFood, isIn, nameClient, namePet, quantity) {
    return (
      <Table.Row>
        <Table.Cell>{id}</Table.Cell>
        <Table.Cell>{nameFood}</Table.Cell>
-       <Table.Cell>{nameSpecies}</Table.Cell>
+       <Table.Cell>{this._formatIsIn(isIn)}</Table.Cell>
+       <Table.Cell>{nameClient}</Table.Cell>
+       <Table.Cell>{namePet}</Table.Cell>
        <Table.Cell>{quantity}</Table.Cell>
-       <Table.Cell textAlign={'center'}>
-         <Button icon='edit' onClick={() => this._handleEditFood(id, nameFood, idSpecies, quantity)} />
-       </Table.Cell>
        <Table.Cell textAlign={'center'}>
          <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
        </Table.Cell>
@@ -84,17 +90,18 @@ class ListFoods extends Component {
        <Table.Header>
          <Table.Row>
            <Table.HeaderCell>Id</Table.HeaderCell>
-           <Table.HeaderCell>Nome</Table.HeaderCell>
-           <Table.HeaderCell>Espécie</Table.HeaderCell>
+           <Table.HeaderCell>Nome Comida</Table.HeaderCell>
+           <Table.HeaderCell>Entrada ou Saída</Table.HeaderCell>
+           <Table.HeaderCell>Nome Doador</Table.HeaderCell>
+           <Table.HeaderCell>Pet Consumidor</Table.HeaderCell>
            <Table.HeaderCell>Quantidade</Table.HeaderCell>
-           <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
-           <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
+           <Table.HeaderCell width={1}></Table.HeaderCell>
          </Table.Row>
        </Table.Header>
 
        <Table.Body>
-         {this.state.foods.map(food => {
-           return this._renderRow(food.idFood, food.nameFood, food.nameSpecies, food.quantity, food.idSpecies)
+         {this.state.foodlog.map(foodlog => {
+           return this._renderRow(foodlog.idFoodLog, foodlog.nameFood, foodlog.isIn, foodlog.nameClient, foodlog.namePet, foodlog.quantity)
          })}
        </Table.Body>
 
@@ -102,33 +109,17 @@ class ListFoods extends Component {
    )
  }
 
- _handleEditFood = (id, name, idSpecies, quantity) => {
-   this.setState({
-     isEditing: true,
-     name: name,
-     id: id,
-     idSpecies: idSpecies,
-     quantity: quantity
-   })
- }
-
- _handleBack = () => {
-   this.setState({
-     isEditing: false
-   })
-   this.componentDidMount()
- }
 
  /**
   * Handlers do modal
   */
- _handleOpen = (id) => this.setState({ selectedFood: id, modalOpen: true })
+ _handleOpen = (id) => this.setState({ selectedFoodLog: id, modalOpen: true })
 
  _handleClose = () => this.setState({ modalOpen: false })
 
 
- handleRemoveFood = () => {
-   removeFood(this.state.selectedFood)
+ handleRemoveFoodLog = () => {
+   removeFoodLog(this.state.selectedFoodLog)
      .then(result => {
        this.setState({
          fetching: false,
@@ -136,11 +127,11 @@ class ListFoods extends Component {
        })
        if (!result.problem) {
          this.setState({
-           successRemoveFood: true
+           successRemoveFoodLog: true
          })
        } else {
          this.setState({
-           errorRemoveFood: true
+           errorRemoveFoodLog: true
          })
        }
      })
@@ -153,17 +144,17 @@ class ListFoods extends Component {
            error
            hidden={!this.state.error}
            header='Erro'
-           content='Houve um erro ao tentar listar as comidas'
+           content='Houve um erro ao tentar listar o Historico de Comida'
          />
          <Message
            error
-           hidden={!this.state.errorRemoveFood}
+           hidden={!this.state.errorRemoveFoodLog}
            header='Erro'
-           content='Houve um erro ao tentar remover uma comida'
+           content='Houve um erro ao tentar remover um Historico'
          />
          <Message
            success
-           hidden={!this.state.successRemoveFood}
+           hidden={!this.state.successRemoveFoodLog}
            header='Sucesso'
            content='Comida removida com sucesso'
          />
@@ -179,12 +170,12 @@ class ListFoods extends Component {
          basic
          size='small'
        >
-         <Header icon='remove circle' content='Remover Comida' />
+         <Header icon='remove circle' content='Remover Historico' />
          <Modal.Content>
-           <h3>Tem certeza que deseja remover essa comida?</h3>
+           <h3>Tem certeza que deseja remover esse Historico?</h3>
          </Modal.Content>
          <Modal.Actions>
-           <Button color='green' onClick={this.handleRemoveFood} inverted>
+           <Button color='green' onClick={this.handleRemoveFoodLog} inverted>
              <Icon name='checkmark' /> Sim
                </Button>
            <Button color='red' onClick={this._handleClose} inverted>
@@ -196,18 +187,6 @@ class ListFoods extends Component {
    }
 
    render() {
-     if (this.state.isEditing) {
-       return (
-         <AddFood
-           isEditing={true}
-           name={this.state.name}
-           id={this.state.id}
-           idSpecies={this.state.idSpecies}
-           quantity={this.state.quantity}
-           back={this._handleBack}
-         />
-       )
-     }
      return (
        <div>
          {this._renderMessages()}
@@ -220,11 +199,11 @@ class ListFoods extends Component {
            </Dimmer>
            {this._renderTable()}
          </Segment>
-         {/* Modal remover comida */}
+         {/* Modal remover foodlog */}
          {this._renderModal()}
        </div>
      )
    }
  }
 
- export default ListFoods;
+ export default ListFoodLog;
