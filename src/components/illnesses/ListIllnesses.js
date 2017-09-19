@@ -19,6 +19,7 @@ import {
   removeIllness
 } from '../../modules/Controller'
 
+import AddIllness from './AddIllness'
 
 class ListIllnesses extends Component {
 
@@ -75,6 +76,9 @@ class ListIllnesses extends Component {
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell>{this._formatIsContagious(isContagious)}</Table.Cell>
         <Table.Cell textAlign={'center'}>
+          <Button icon='edit' onClick={() => this._handleEditIllness(id, name, isContagious)} />
+        </Table.Cell>
+        <Table.Cell textAlign={'center'}>
           <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
         </Table.Cell>
       </Table.Row>
@@ -90,7 +94,8 @@ class ListIllnesses extends Component {
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Nome</Table.HeaderCell>
             <Table.HeaderCell>Contagiosa</Table.HeaderCell>
-            <Table.HeaderCell width={1}></Table.HeaderCell>
+            <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -103,6 +108,24 @@ class ListIllnesses extends Component {
       </Table>
     )
   }
+
+
+  _handleEditIllness = (id, name, isContagious) => {
+    this.setState({
+      isEditing: true,
+      name: name,
+      id: id,
+      isContagious: isContagious
+    })
+  }
+
+  _handleBack = () => {
+    this.setState({
+      isEditing: false
+    })
+    this.componentDidMount()
+  }
+
 
   _renderMessages() {
     return (
@@ -182,6 +205,17 @@ class ListIllnesses extends Component {
   }
 
   render() {
+    if (this.state.isEditing) {
+      return (
+        <AddIllness
+          isEditing={true}
+          name={this.state.name}
+          id={this.state.id}
+          isContagious={this.state.isContagious}
+          back={this._handleBack}
+        />
+      )
+    }
     return (
       <div>
         {this._renderMessages()}

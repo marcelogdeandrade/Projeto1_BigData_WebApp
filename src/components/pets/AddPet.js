@@ -19,7 +19,8 @@ import {
   addPet, 
   getMedicines,
   getSpecies,
-  getClients
+  getClients, 
+  updatePet
 } from '../../modules/Controller'
 
 
@@ -34,10 +35,20 @@ class AddPet extends Component {
       error: false,
       errorSpecies: false,
       errorClients: false,
+      successUpdate: false,
+      errorUpdate: false,
       species: [],
       clients: [],
-      birthDate: moment()
+      name: this.props.name,
+      idSpecies: this.props.species,
+      idClient: this.props.client
     }
+    if (props.birthDate){
+      this.state.birthDate = moment(props.birthDate, "DD/MM/YYYY") 
+    } else {
+      this.state.birthDate = moment()
+    }
+    console.log(this.state.birthDate)
     this._handleChangeDate = this._handleChangeDate.bind(this)
     this._renderForm = this._renderForm.bind(this)
   }
@@ -130,39 +141,60 @@ class AddPet extends Component {
 
   handleSubmit = () => {
     let { name, idSpecies, idClient, birthDate } = this.state
+    const idPet = this.props.id
     birthDate = moment(birthDate).format('YYYY-MM-DD')
     if (!idClient){
       idClient = null
     }
     this.setState({ fetching: true })
-    addPet(name, idSpecies, idClient, birthDate)
-      .then(result => {
-        this.setState({
-          fetching: false
+    if (this.props.isEditing) {
+      updatePet(idPet, name, idSpecies, idClient, birthDate)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          if (!result.problem) {
+            this.setState({
+              successUpdate: true
+            })
+          } else {
+            this.setState({
+              errorUpdate: true
+            })
+          }
         })
-        console.log(result)
-        if (!result.problem) {
+    } else {
+      addPet(name, idSpecies, idClient, birthDate)
+        .then(result => {
           this.setState({
-            success: true
+            fetching: false
           })
-        } else {
-          this.setState({
-            error: true
-          })
-        }
-      })
-  }
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+      }
+    }
 
   _renderMessages(){
     return(
       <div>
         <Message
           success
+          hidden={!this.state.success}
           header='Pet Adicionado'
           content="Você adicionou um pet com sucesso"
         />
         <Message
           error
+          hidden={!this.state.error}
           header='Erro'
           content='Houve um erro ao tentar adicionar um pet'
         />
@@ -178,6 +210,18 @@ class AddPet extends Component {
           header='Erro'
           content='Houve um erro ao listar os clientes'
         />
+        <Message
+          success
+          hidden={!this.state.successUpdate}
+          header='Pet Atualizado'
+          content="Você atualizou um pet com sucesso"
+        />
+        <Message
+          error
+          hidden={!this.state.errorUpdate}
+          header='Erro'
+          content='Houve um erro ao tentar atualizar um pet'
+        />
       </div>
     )
   }
@@ -190,8 +234,6 @@ class AddPet extends Component {
     return (
       <Form
         loading={this.state.fetching}
-        success={this.state.success}
-        error={this.state.error}
         onSubmit={this.handleSubmit}
       >
         {/* Nome */}
@@ -199,20 +241,20 @@ class AddPet extends Component {
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
+          <Form.Input defaultValue={this.props.name} placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
         {/* Espécie */}
         <Form.Field
           required
         >
           <label>Espécie</label>
-          <Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
+          <Select defaultValue={String(this.props.species)} loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
         </Form.Field>
         {/* Cliente */}
         <Form.Field
         >
           <label>Cliente</label>
-          <Select loading={this.state.fetchingClients} placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
+          <Select defaultValue={String(this.props.client)} loading={this.state.fetchingClients} placeholder='Cliente' options={clients} onChange={this._handleChangeClient}/>
         </Form.Field>
         {/* Data de Nascimento */}
         <Form.Field
@@ -224,20 +266,22 @@ class AddPet extends Component {
             dateFormat={'DD/MM/YYYY'}
           />
         </Form.Field>
-        {this._renderMessages()}
-        <Button type='submit'>Adicionar Pet</Button>
+        <Button type='submit'>{this.props.isEditing ? 'Atualizar Pet' : 'Adicionar Pet'}</Button>
       </Form>
     )
   }
 
   render() {
+    console.log(this.props)
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
             <Segment>
               {this._renderForm()}
+              {this._renderMessages()}
             </Segment>
+            {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
           </Grid.Column>
         </Grid.Row>
       </Grid>

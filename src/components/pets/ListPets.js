@@ -28,6 +28,8 @@ import {
   addIllnessToPet
 } from '../../modules/Controller'
 
+import AddPet from './AddPet'
+
 import moment from 'moment'
 
 import Cleave from 'cleave.js'
@@ -150,7 +152,7 @@ class ListPets extends Component {
     return result
   }
 
-  _renderRow(id, name, speciesName, birthDate, clientName) {
+  _renderRow(id, name, speciesName, birthDate, clientName, idSpecies, idClient) {
     return (
       <Table.Row>
         <Table.Cell>{id}</Table.Cell>
@@ -163,6 +165,9 @@ class ListPets extends Component {
         </Table.Cell>
         <Table.Cell textAlign={'center'}>
           <Button positive icon='add' onClick={() => this._handleOpenAddIllness(id)} />
+        </Table.Cell>
+        <Table.Cell textAlign={'center'}>
+          <Button icon='edit' onClick={() => this._handleEditPet(id, name, birthDate, idSpecies, idClient)} />
         </Table.Cell>
         <Table.Cell textAlign={'center'}>
           <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
@@ -183,7 +188,8 @@ class ListPets extends Component {
             <Table.HeaderCell>Cliente</Table.HeaderCell>
             <Table.HeaderCell width={2}>Adicionar Remédio</Table.HeaderCell>
             <Table.HeaderCell width={2}>Adicionar Doença</Table.HeaderCell>
-            <Table.HeaderCell width={1}></Table.HeaderCell>
+            <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -193,12 +199,32 @@ class ListPets extends Component {
                                    pet.namePet, 
                                    pet.nameSpecies, 
                                    this._formatDate(pet.birthDate), 
-                                   pet.nameClient)
+                                   pet.nameClient,
+                                   pet.idSpecies.toString(),
+                                   pet.idClient)
           })}
         </Table.Body>
 
       </Table>
     )
+  }
+
+  _handleEditPet = (id, name, birthDate, idSpecies, idClient) => {
+    this.setState({
+      isEditing: true,
+      name: name,
+      id: id,
+      idSpecies: idSpecies,
+      idClient: idClient,
+      birthDate: birthDate
+    })
+  }
+
+  _handleBack = () => {
+    this.setState({
+      isEditing: false
+    })
+    this.componentDidMount()
   }
 
   _renderMessages(){
@@ -480,6 +506,19 @@ class ListPets extends Component {
   }
 
   render() {
+    if (this.state.isEditing) {
+      return (
+        <AddPet
+          isEditing={true}
+          name={this.state.name}
+          id={this.state.id}
+          birthDate={this.state.birthDate}
+          species={this.state.idSpecies}
+          client={this.state.idClient}
+          back={this._handleBack}
+        />
+      )
+    }
     return (
       <div>
         {this._renderMessages()}

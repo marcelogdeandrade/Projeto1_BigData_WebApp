@@ -49,6 +49,12 @@ export const addPet = async (name, idSpecies, idClient, birthDate) => {
     .then((response) => response)
 }
 
+export const updatePet = async (idPet, name, idSpecies, idClient, birthDate) => {
+  return api
+    .put('/pets', {idPet: idPet, name: name, idSpecies: idSpecies, idClient: idClient, birthDate: birthDate })
+    .then((response) => response)
+}
+
 export const removePet = async (idPet) => {
   return api
     .delete('/pets', { idPet: idPet })
@@ -68,6 +74,12 @@ export const getMedicines = async () => {
 export const addMedicine = async (name) => {
   return api
     .post('/medicines', { name: name })
+    .then((response) => response)
+}
+
+export const updateMedicine = async (idMedicine, name) => {
+  return api
+    .put('/medicines', { idMedicine: idMedicine, name: name })
     .then((response) => response)
 }
 
@@ -114,6 +126,12 @@ export const addIllness = async (name, contagious) => {
     .then((response) => response)
 }
 
+export const updateIllness = async (idIllness, name, contagious) => {
+  return api
+    .put('/illnesses', { idIllness: idIllness, name: name, contagious: contagious })
+    .then((response) => response)
+}
+
 export const removeIllness = async (idIllness) => {
   return api
     .delete('/illnesses', { idIllness: idIllness })
@@ -136,6 +154,7 @@ export const addIllnessToPet = async (idIllness, idPet) => {
     .then((response) => response)
 }
 
+
 export const removeIllnessPet = async (idIllnessPet, idIllness, idPet) => {
   return api
     .delete('/relillnessespets', { idIllnessPet: idIllnessPet, idIllness: idIllness, idPet: idPet })
@@ -155,6 +174,12 @@ export const getClients = async () => {
 export const addClient = async (name, birthDate) => {
   return api
     .post('/clients', { name: name, birthDate: birthDate })
+    .then((response) => response)
+}
+
+export const updateClient = async (idClient, name, birthDate) => {
+  return api
+    .put('/clients', { idClient: idClient, name: name, birthDate: birthDate })
     .then((response) => response)
 }
 
@@ -200,7 +225,7 @@ export const addFoodLog = async (idFood, isIn, idClient, idPet) => {
     .then((response) => response)
 }
 
-export const removeFood = async (idFoodLog) => {
+export const removeFoodLog = async (idFood) => {
   return api
     .delete('/foodlog', { idFoodLog: idFoodLog})
     .then((response) => response)

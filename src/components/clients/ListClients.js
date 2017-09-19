@@ -17,6 +17,7 @@ import {
   removeClient
 } from '../../modules/Controller'
 
+import AddClient from './AddClient'
 import moment from 'moment'
 
 class ListClients extends Component {
@@ -68,7 +69,10 @@ class ListClients extends Component {
       <Table.Row>
         <Table.Cell>{id}</Table.Cell>
         <Table.Cell>{name}</Table.Cell>
-        <Table.Cell>{birthDate}</Table.Cell>        
+        <Table.Cell>{birthDate}</Table.Cell> 
+        <Table.Cell textAlign={'center'}>
+          <Button icon='edit' onClick={() => this._handleEditClient(id, name, birthDate)} />
+        </Table.Cell>       
         <Table.Cell textAlign={'center'}>
           <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
         </Table.Cell>
@@ -85,7 +89,8 @@ class ListClients extends Component {
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Nome</Table.HeaderCell>
             <Table.HeaderCell>Data de nascimento</Table.HeaderCell>
-            <Table.HeaderCell width={1}></Table.HeaderCell>
+            <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -97,6 +102,23 @@ class ListClients extends Component {
 
       </Table>
     )
+  }
+
+
+  _handleEditClient = (id, name, birthDate) => {
+    this.setState({
+      isEditing: true,
+      name: name,
+      id: id,
+      birthDate: birthDate
+    })
+  }
+
+  _handleBack = () => {
+    this.setState({
+      isEditing: false
+    })
+    this.componentDidMount()
   }
 
   /**
@@ -114,6 +136,7 @@ class ListClients extends Component {
           fetching: false,
           modalOpen: false
         })
+        console.log(result)
         if (!result.problem) {
           this.setState({
             successRemoveClient: true
@@ -176,6 +199,17 @@ class ListClients extends Component {
   }
 
   render() {
+    if (this.state.isEditing) {
+      return (
+        <AddClient
+          isEditing={true}
+          name={this.state.name}
+          id={this.state.id}
+          birthDate={this.state.birthDate}
+          back={this._handleBack}
+        />
+      )
+    }
     return (
       <div>
         {this._renderMessages()}
