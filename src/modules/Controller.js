@@ -173,9 +173,30 @@ export const getFoods = async () => {
     .then((response) => response)
 }
 
-export const addFood = async (name, idSpecies, quantity) => {
+export const addFood = async (nameFood, idSpecies, quantity) => {
   return api
-    .post('/foods', { name: name, idSpecies: idSpecies, quantity: quantity })
+    .post('/foods', { nameFood: nameFood, idSpecies: idSpecies, quantity: quantity })
+    .then((response) => response)
+}
+
+export const removeFood = async (idFood) => {
+  return api
+    .delete('/foods', { idFood: idFood })
+    .then((response) => response)
+}
+
+/**
+ * FoodLog
+ */
+export const getFoodLog = async () => {
+  return api
+    .get('/foodlog')
+    .then((response) => response)
+}
+
+export const addFoodLog = async (idFood, isIn, idClient, idPet) => {
+  return api
+    .post('/foodlog', { id: name, idSpecies: idSpecies, quantity: quantity })
     .then((response) => response)
 }
 
