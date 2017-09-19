@@ -137,7 +137,8 @@ class Home extends Component {
 
           <Dropdown item text='Histórico de Comida'>
             <Dropdown.Menu>
-              <Dropdown.Item name='add_foodlog' onClick={this.handleItemClick}>Adicionar Comida</Dropdown.Item>
+              <Dropdown.Item name='add_foodlog' onClick={this.handleItemClick}>Adicionar Log de Comida</Dropdown.Item>
+              <Dropdown.Item name='list_foodlog' onClick={this.handleItemClick}>Listar Historico de Comida</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 

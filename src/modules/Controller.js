@@ -202,6 +202,6 @@ export const addFoodLog = async (idFood, isIn, idClient, idPet) => {
 
 export const removeFood = async (idFoodLog) => {
   return api
-    .delete('/foods', { idFoodLog: idFoodLog})
+    .delete('/foodlog', { idFoodLog: idFoodLog})
     .then((response) => response)
 }
