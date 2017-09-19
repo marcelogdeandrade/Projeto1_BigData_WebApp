@@ -175,6 +175,6 @@ export const addFood = async (name, idSpecies, quantity) => {
 
 export const removeFood = async (idFood) => {
   return api
-    .delete('/clients', { idFood: idFood })
+    .delete('/foods', { idFood: idFood })
     .then((response) => response)
 }
