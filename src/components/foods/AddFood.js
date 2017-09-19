@@ -75,7 +75,7 @@ class AddFood extends Component {
    */
 
   _handleChangeName = (e, { name, value }) => this.setState({ name: value })
-  _handleChangeidSpecies = (e, { idSpecies, value }) => this.setState({ idSpecies: value })
+  _handleChangeSpecies = (e, { idSpecies, value }) => this.setState({ idSpecies: value })
   _handleChangeQuantity = (e, { quantity, value }) => this.setState({ quantity: value })
 
   /**
@@ -89,6 +89,7 @@ class AddFood extends Component {
         this.setState({
           fetching: false
         })
+        console.log(result)
         if (!result.problem) {
           this.setState({
             success: true
@@ -151,7 +152,6 @@ class AddFood extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <Grid>
         <Grid.Row>

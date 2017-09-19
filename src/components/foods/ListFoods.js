@@ -59,7 +59,7 @@ class ListFoods extends Component {
      })
  }
 
- _renderRow(idFood, nameFood, nameSpecies, quantity) {
+ _renderRow(id, nameFood, nameSpecies, quantity) {
    return (
      <Table.Row>
        <Table.Cell>{id}</Table.Cell>
@@ -89,7 +89,7 @@ class ListFoods extends Component {
 
        <Table.Body>
          {this.state.foods.map(food => {
-           return this._renderRow(food.idFood, food.nameFood, species.nameSpecies, food.quantity)
+           return this._renderRow(food.idFood, food.nameFood, food.nameSpecies, food.quantity)
          })}
        </Table.Body>
 
@@ -162,7 +162,7 @@ class ListFoods extends Component {
            <h3>Tem certeza que deseja remover essa comida?</h3>
          </Modal.Content>
          <Modal.Actions>
-           <Button color='green' onClick={this.handleRemoveComida} inverted>
+           <Button color='green' onClick={this.handleRemoveFood} inverted>
              <Icon name='checkmark' /> Sim
                </Button>
            <Button color='red' onClick={this._handleClose} inverted>

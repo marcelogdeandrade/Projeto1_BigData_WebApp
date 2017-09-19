@@ -198,9 +198,9 @@ export const getFoods = async () => {
     .then((response) => response)
 }
 
-export const addFood = async (nameFood, idSpecies, quantity) => {
+export const addFood = async (name, idSpecies, quantity) => {
   return api
-    .post('/foods', { nameFood: nameFood, idSpecies: idSpecies, quantity: quantity })
+    .post('/foods', { name: name, idSpecies: idSpecies, quantity: quantity })
     .then((response) => response)
 }
 
@@ -219,9 +219,9 @@ export const getFoodLog = async () => {
     .then((response) => response)
 }
 
-export const addFoodLog = async (idFood, isIn, idClient, idPet) => {
+export const addFoodLog = async (idFood, isIn, idClient, idPet, quantity) => {
   return api
-    .post('/foodlog', { idFood: idFood, isIn: isIn, idClient: idClient, idPet:idPet })
+    .post('/foodlog', { idFood: idFood, isIn: isIn, idClient: idClient, idPet:idPet, quantity: quantity})
     .then((response) => response)
 }
 
