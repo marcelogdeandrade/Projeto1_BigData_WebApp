@@ -186,7 +186,7 @@ class ListFoods extends Component {
            </Dimmer>
            {this._renderTable()}
          </Segment>
-         {/* Modal remover espécie */}
+         {/* Modal remover comida */}
          {this._renderModal()}
        </div>
      )
