@@ -19,6 +19,7 @@ import {
   removeMedicine
 } from '../../modules/Controller'
 
+import AddMedicine from './AddMedicine'
 
 class ListMedicines extends Component {
 
@@ -66,6 +67,9 @@ class ListMedicines extends Component {
         <Table.Cell>{id}</Table.Cell>
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell textAlign={'center'}>
+          <Button icon='edit' onClick={() => this._handleEditMedicine(id, name)} />
+        </Table.Cell>
+        <Table.Cell textAlign={'center'}>
           <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
         </Table.Cell>
       </Table.Row>
@@ -80,7 +84,8 @@ class ListMedicines extends Component {
           <Table.Row>
             <Table.HeaderCell>Id</Table.HeaderCell>
             <Table.HeaderCell>Nome</Table.HeaderCell>
-            <Table.HeaderCell width={1}></Table.HeaderCell>
+            <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -92,6 +97,21 @@ class ListMedicines extends Component {
 
       </Table>
     )
+  }
+
+  _handleEditMedicine = (id, name) => {
+    this.setState({
+      isEditing: true,
+      name: name,
+      id: id
+    })
+  }
+
+  _handleBack = () => {
+    this.setState({
+      isEditing: false
+    })
+    this.componentDidMount()
   }
 
   _renderMessages(){
@@ -172,6 +192,16 @@ class ListMedicines extends Component {
   }
 
   render() {
+    if (this.state.isEditing) {
+      return (
+        <AddMedicine
+          isEditing={true}
+          name={this.state.name}
+          id={this.state.id}
+          back={this._handleBack}
+        />
+      )
+    }
     return (
       <div>
         {this._renderMessages()}

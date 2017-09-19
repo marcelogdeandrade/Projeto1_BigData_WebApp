@@ -15,7 +15,8 @@ import {
 
 import {
   addIllness,
-  getPets
+  getPets,
+  updateIllness
 } from '../../modules/Controller'
 
 
@@ -27,6 +28,8 @@ class AddIllness extends Component {
       success: false,
       error: false,
       isContagious: false,
+      name: props.name,
+      isContagious: props.isContagious
     }
   }
 
@@ -44,24 +47,43 @@ class AddIllness extends Component {
 
   handleSubmit = () => {
     let { name, isContagious} = this.state
-    console.log(isContagious)
+    const idIllness = this.props.id
     this.setState({ fetching: true })
-    addIllness(name, + isContagious)
-      .then(result => {
-        this.setState({
-          fetching: false
+    if (this.props.isEditing) {
+      updateIllness(idIllness, name, + isContagious)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              successUpdate: true
+            })
+          } else {
+            this.setState({
+              errorUpdate: true
+            })
+          }
         })
-        console.log(result)
-        if (!result.problem) {
+    } else {
+      addIllness(name, + isContagious)
+        .then(result => {
           this.setState({
-            success: true
+            fetching: false
           })
-        } else {
-          this.setState({
-            error: true
-          })
-        }
-      })
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+      }
   }
 
   _renderMessages() {
@@ -69,13 +91,27 @@ class AddIllness extends Component {
       <div>
         <Message
           success
+          hidden={!this.state.success}
           header='Doença Adicionada'
           content="Você adicionou uma doença com sucesso"
         />
         <Message
           error
+          hidden={!this.state.error}
           header='Erro'
           content='Houve um erro ao tentar adicionar uma doença'
+        />
+        <Message
+          success
+          hidden={!this.state.successUpdate}
+          header='Doença Atualizada'
+          content="Você atualizou uma doença com sucesso"
+        />
+        <Message
+          error
+          hidden={!this.state.errorUpdate}
+          header='Erro'
+          content='Houve um erro ao tentar atualizar uma doença'
         />
       </div>
     )
@@ -85,8 +121,6 @@ class AddIllness extends Component {
     return (
       <Form
         loading={this.state.fetching}
-        success={this.state.success}
-        error={this.state.error}
         onSubmit={this.handleSubmit}
       >
         {/* Nome */}
@@ -94,16 +128,15 @@ class AddIllness extends Component {
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
+          <Form.Input defaultValue={this.props.name} placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
         <Form.Field
           required
         >
           <label>Contagiosa</label>
-          <Checkbox toggle onChange={this._handleChangeContagious}/>
+          <Checkbox defaultChecked = {!!this.state.isContagious} toggle onChange={this._handleChangeContagious}/>
         </Form.Field>
-        {this._renderMessages()}
-        <Button type='submit'>Adicionar Doença</Button>
+        <Button type='submit'>{this.props.isEditing ? 'Atualizar Doença' : 'Adicionar Doença'}</Button>
       </Form>
     )
   }
@@ -116,6 +149,8 @@ class AddIllness extends Component {
             <Segment>
               {this._renderForm()}
             </Segment>
+            {this._renderMessages()}
+            {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
           </Grid.Column>
         </Grid.Row>
       </Grid>

@@ -15,7 +15,8 @@ import {
 
 import { 
   addMedicine, 
-  getPets 
+  getPets,
+  updateMedicine
 } from '../../modules/Controller'
 
 
@@ -26,6 +27,7 @@ class AddMedicine extends Component {
       fetching: false,
       success: false,
       error: false,
+      name: props.name
     }
   }
 
@@ -41,22 +43,42 @@ class AddMedicine extends Component {
 
   handleSubmit = () => {
     let { name } = this.state
+    const idMedicine = this.props.id
     this.setState({ fetching: true })
-    addMedicine(name)
-      .then(result => {
-        this.setState({
-          fetching: false
+    if (this.props.isEditing) {
+      updateMedicine(idMedicine, name)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              successUpdate: true
+            })
+          } else {
+            this.setState({
+              errorUpdate: true
+            })
+          }
         })
-        if (!result.problem) {
+    } else {
+      addMedicine(name)
+        .then(result => {
           this.setState({
-            success: true
+            fetching: false
           })
-        } else {
-          this.setState({
-            error: true
-          })
-        }
-      })
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+    }
   }
 
   _renderMessages(){
@@ -64,13 +86,27 @@ class AddMedicine extends Component {
       <div>
         <Message
           success
+          hidden={!this.state.success}
           header='Remédio Adicionado'
           content="Você adicionou um remédio com sucesso"
         />
         <Message
           error
+          hidden={!this.state.error}
           header='Erro'
           content='Houve um erro ao tentar adicionar um remédio'
+        />
+        <Message
+          success
+          hidden={!this.state.successUpdate}
+          header='Remédio Atualizado'
+          content="Você atualizou um remédio com sucesso"
+        />
+        <Message
+          error
+          hidden={!this.state.errorUpdate}
+          header='Erro'
+          content='Houve um erro ao tentar atualizar um remédio'
         />
       </div>
     )
@@ -85,8 +121,6 @@ class AddMedicine extends Component {
     return (
       <Form
         loading={this.state.fetching}
-        success={this.state.success}
-        error={this.state.error}
         onSubmit={this.handleSubmit}
       >
         {/* Nome */}
@@ -94,10 +128,9 @@ class AddMedicine extends Component {
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
+          <Form.Input defaultValue = {this.props.name} placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
-        {this._renderMessages()}
-        <Button type='submit'>Adicionar Remédio</Button>
+        <Button type='submit'>{this.props.isEditing ? 'Atualizar Remédio' : 'Adicionar Remédio'}</Button>
       </Form>
     )
   }
@@ -110,6 +143,8 @@ class AddMedicine extends Component {
             <Segment>
               {this._renderForm()}
             </Segment>
+            {this._renderMessages()}
+            {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
           </Grid.Column>
         </Grid.Row>
       </Grid>
