@@ -17,6 +17,7 @@ import {
   removeFood
 } from '../../modules/Controller'
 
+import AddFood from './AddFood'
 import moment from 'moment'
 
 class ListFoods extends Component {
@@ -59,13 +60,16 @@ class ListFoods extends Component {
      })
  }
 
- _renderRow(id, nameFood, nameSpecies, quantity) {
+ _renderRow(id, nameFood, nameSpecies, quantity, idSpecies) {
    return (
      <Table.Row>
        <Table.Cell>{id}</Table.Cell>
        <Table.Cell>{nameFood}</Table.Cell>
        <Table.Cell>{nameSpecies}</Table.Cell>
        <Table.Cell>{quantity}</Table.Cell>
+       <Table.Cell textAlign={'center'}>
+         <Button icon='edit' onClick={() => this._handleEditFood(id, nameFood, idSpecies, quantity)} />
+       </Table.Cell>
        <Table.Cell textAlign={'center'}>
          <Button negative icon='remove' onClick={() => this._handleOpen(id)} />
        </Table.Cell>
@@ -83,18 +87,36 @@ class ListFoods extends Component {
            <Table.HeaderCell>Nome</Table.HeaderCell>
            <Table.HeaderCell>Espécie</Table.HeaderCell>
            <Table.HeaderCell>Quantidade</Table.HeaderCell>
-           <Table.HeaderCell width={1}></Table.HeaderCell>
+           <Table.HeaderCell width={1}>Editar</Table.HeaderCell>
+           <Table.HeaderCell width={1}>Remover</Table.HeaderCell>
          </Table.Row>
        </Table.Header>
 
        <Table.Body>
          {this.state.foods.map(food => {
-           return this._renderRow(food.idFood, food.nameFood, food.nameSpecies, food.quantity)
+           return this._renderRow(food.idFood, food.nameFood, food.nameSpecies, food.quantity, food.idSpecies)
          })}
        </Table.Body>
 
      </Table>
    )
+ }
+
+ _handleEditFood = (id, name, idSpecies, quantity) => {
+   this.setState({
+     isEditing: true,
+     name: name,
+     id: id,
+     idSpecies: idSpecies,
+     quantity: quantity
+   })
+ }
+
+ _handleBack = () => {
+   this.setState({
+     isEditing: false
+   })
+   this.componentDidMount()
  }
 
  /**
@@ -174,6 +196,18 @@ class ListFoods extends Component {
    }
 
    render() {
+     if (this.state.isEditing) {
+       return (
+         <AddFood
+           isEditing={true}
+           name={this.state.name}
+           id={this.state.id}
+           idSpecies={this.state.idSpecies}
+           quantity={this.state.quantity}
+           back={this._handleBack}
+         />
+       )
+     }
      return (
        <div>
          {this._renderMessages()}

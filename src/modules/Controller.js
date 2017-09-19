@@ -204,6 +204,12 @@ export const addFood = async (name, idSpecies, quantity) => {
     .then((response) => response)
 }
 
+export const updateFood = async (idFood, name, idSpecies, quantity) => {
+  return api
+    .put('/foods', { idFood: idFood, name: name, idSpecies: idSpecies, quantity: quantity })
+    .then((response) => response)
+}
+
 export const removeFood = async (idFood) => {
   return api
     .delete('/foods', { idFood: idFood })

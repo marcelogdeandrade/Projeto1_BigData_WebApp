@@ -15,7 +15,8 @@ import moment from 'moment';
 
 import {
   addFood,
-  getSpecies
+  getSpecies,
+  updateFood
 } from '../../modules/Controller'
 
 
@@ -28,7 +29,10 @@ class AddFood extends Component {
       success: false,
       error: false,
       errorSpecies:false,
-      species:[]
+      species:[],
+      name: props.name,
+      idSpecies: props.idSpecies,
+      quantity: props.quantity
     }
     this._renderForm = this._renderForm.bind(this)
   }
@@ -84,6 +88,24 @@ class AddFood extends Component {
    */
   handleSubmit = () => {
     let{ name, idSpecies, quantity} = this.state
+    const idFood = this.props.id
+    if (this.props.isEditing) {
+      updateFood(idFood, name, idSpecies, quantity)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+    } else {
     addFood(name,idSpecies,quantity)
       .then(result => {
         this.setState({
@@ -100,6 +122,7 @@ class AddFood extends Component {
           })
         }
       })
+    }
   }
 
   _renderMessages(){
@@ -107,13 +130,27 @@ class AddFood extends Component {
       <div>
         <Message
           success
+          hidden={!this.state.success}
           header='Comida Adicionada'
           content="Você adicionou uma comida com sucesso"
         />
         <Message
           error
+          hidden={!this.state.error}
           header='Erro'
           content='Houve um erro ao tentar adicionar uma comida'
+        />
+        <Message
+          success
+          hidden={!this.state.successUpdate}
+          header='Comida Atualizada'
+          content="Você atualizou uma comida com sucesso"
+        />
+        <Message
+          error
+          hidden={!this.state.errorUpdate}
+          header='Erro'
+          content='Houve um erro ao tentar atualizar uma comida'
         />
       </div>
     )
@@ -125,33 +162,31 @@ class AddFood extends Component {
     return (
       <Form
         loading={this.state.fetching}
-        success={this.state.success}
-        error={this.state.error}
         onSubmit={this.handleSubmit}
       >
         <Form.Field
           required
         >
           <label>Nome</label>
-          <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
+          <Form.Input defaultValue={this.props.name} placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
         <Form.Field>
           <label>Espécie</label>
-          <Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
+          <Select defaultValue={String(this.props.idSpecies)} loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
         </Form.Field>
         <Form.Field
           required
         >
           <label>Quantidade</label>
-          <Form.Input placeholder='Quantidade' name='quantidade' onChange={this._handleChangeQuantity} />
+          <Form.Input defaultValue={this.props.quantity} placeholder='Quantidade' name='quantidade' onChange={this._handleChangeQuantity} />
         </Form.Field>
-        {this._renderMessages()}
-        <Button type='submit'>Adicionar Comida</Button>
+        <Button type='submit'>{this.props.isEditing ? 'Atualizar Comida' : 'Adicionar Comida'}</Button>
       </Form>
     )
   }
 
   render() {
+    console.log(this.state)
     return (
       <Grid>
         <Grid.Row>
@@ -159,6 +194,8 @@ class AddFood extends Component {
             <Segment>
               {this._renderForm()}
             </Segment>
+            {this._renderMessages()}
+            {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
           </Grid.Column>
         </Grid.Row>
       </Grid>
