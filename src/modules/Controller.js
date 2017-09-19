@@ -49,6 +49,12 @@ export const addPet = async (name, idSpecies, idClient, birthDate) => {
     .then((response) => response)
 }
 
+export const updatePet = async (idPet, name, idSpecies, idClient, birthDate) => {
+  return api
+    .put('/pets', {idPet: idPet, name: name, idSpecies: idSpecies, idClient: idClient, birthDate: birthDate })
+    .then((response) => response)
+}
+
 export const removePet = async (idPet) => {
   return api
     .delete('/pets', { idPet: idPet })
