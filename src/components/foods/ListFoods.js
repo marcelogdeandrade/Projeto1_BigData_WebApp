@@ -100,7 +100,7 @@ class ListFoods extends Component {
  /**
   * Handlers do modal
   */
- _handleOpen = (id) => this.setState({ selectedClient: id, modalOpen: true })
+ _handleOpen = (id) => this.setState({ selectedFood: id, modalOpen: true })
 
  _handleClose = () => this.setState({ modalOpen: false })
 
