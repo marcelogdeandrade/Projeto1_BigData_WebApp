@@ -7,7 +7,8 @@ import {
   Dimmer,
   Loader,
   Segment,
-  Grid
+  Grid,
+  Select
 } from 'semantic-ui-react'
 
 import moment from 'moment';
@@ -119,6 +120,7 @@ class AddFood extends Component {
 
   _renderForm() {
     const { name, idSpecies, quantity } = this.state
+    const species = this._formatSpeciesList(this.state.species)
     return (
       <Form
         loading={this.state.fetching}
@@ -132,10 +134,10 @@ class AddFood extends Component {
           <label>Nome</label>
           <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
         </Form.Field>
-        <Form.Field
-        >
+        <Form.Field>
           <label>Espécie</label>
-          <<Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
+          <Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
+        </Form.Field>
         <Form.Field
           required
         >
@@ -149,6 +151,7 @@ class AddFood extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <Grid>
         <Grid.Row>
