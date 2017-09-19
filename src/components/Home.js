@@ -13,6 +13,8 @@ import IllnessesPets from './relillnessespets/IllnessesPets'
 import AddClient from './clients/AddClient'
 import ListClients from './clients/ListClients'
 import AddFood from './foods/AddFood'
+import ListFood from './foods/ListFoods'
+import AddFoodLog from './foodlog/AddFoodLog'
 
 class Home extends Component {
   state = {}
@@ -71,6 +73,10 @@ class Home extends Component {
     } if (this.state.activeItem === 'add_food') {
       return (
         <AddFood />
+      )
+    } if (this.state.activeItem === 'list_food') {
+      return (
+        <ListFood />
       )
     } if (this.state.activeItem === 'add_foodlog') {
       return (
