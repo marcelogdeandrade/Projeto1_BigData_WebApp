@@ -13,7 +13,8 @@ import {
 import moment from 'moment';
 
 import {
-  addFood
+  addFood,
+  getSpecies
 } from '../../modules/Controller'
 
 
@@ -22,10 +23,55 @@ class AddFood extends Component {
     super(props)
     this.state = {
       fetching: false,
+      fetchingSpecies: false,
       success: false,
       error: false,
+      errorSpecies:false,
+      species:[]
     }
+    this._renderForm = this._renderForm.bind(this)
   }
+
+  componentDidMount() {
+    this.setState({
+      fetchingSpecies: true
+    })
+    getSpecies()
+      .then(result => {
+        if (result.problem) {
+          this.setState({
+            errorSpecies: true,
+            fetchingSpecies: false
+          })
+        } else {
+          this.setState({
+            errorSpecies: false,
+            species: result.data,
+            fetchingSpecies: false
+          })
+        }
+      })
+  }
+
+  _formatSpeciesList(species){
+    let result = []
+    species.map(item => {
+      const obj = {
+        key: item.idSpecies.toString(),
+        value: item.idSpecies.toString(),
+        text: item.name
+      }
+      result.push(obj)
+      return item
+    });
+    return result
+  }
+
+  /**
+   * Input Handlers
+   *
+   * @memberof addFood
+   */
 
   _handleChangeName = (e, { name, value }) => this.setState({ name: value })
   _handleChangeidSpecies = (e, { idSpecies, value }) => this.setState({ idSpecies: value })
@@ -89,8 +135,7 @@ class AddFood extends Component {
         <Form.Field
         >
           <label>Espécie</label>
-          <Form.Input placeholder='Espécie' name='idSpecies' onChange={this._handleChangeidSpecies} />
-        </Form.Field>
+          <<Select loading={this.state.fetchingSpecies}placeholder='Espécie' options={species} onChange={this._handleChangeSpecies} />
         <Form.Field
           required
         >
