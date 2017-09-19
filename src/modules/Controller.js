@@ -21,6 +21,12 @@ export const addSpecies = async (name) => {
     .then((response) => response)
 }
 
+export const updateSpecies = async (name, idSpecies) => {
+  return api
+    .put('/species', { name: name, idSpecies: idSpecies})
+    .then((response) => response)
+}
+
 export const removeSpecies = async (idSpecies) => {
     return api
     .delete('/species', {idSpecies: idSpecies})

@@ -11,7 +11,8 @@ import {
 } from 'semantic-ui-react'
 
 import { 
-  addSpecies 
+  addSpecies,
+  updateSpecies
 } from '../../modules/Controller'
 
 
@@ -21,12 +22,12 @@ class AddSpecies extends Component {
     this.state = {
       fetching: false,
       success: false,
-      error: false
+      error: false,
+      name: props.name
     }
   }
 
   _handleChangeName = (e, { name, value }) => this.setState({ [name]: value })
-
   /**
    * 
    * Adiciona uma espécie
@@ -34,22 +35,41 @@ class AddSpecies extends Component {
    */
   handleSubmit = () => {
     const { name } = this.state
-    this.setState({ submittedName: name, fetching: true })
-    addSpecies(name)
-      .then(result => {
-        this.setState({
-          fetching: false
+    const idSpecies = this.props.id
+    if (this.props.isEditing){
+      updateSpecies(name, idSpecies)
+        .then(result => {
+          this.setState({
+            fetching: false
+          })
+          console.log(result)
+          if (!result.problem) {
+            this.setState({
+              successUpdate: true
+            })
+          } else {
+            this.setState({
+              errorUpdate: true
+            })
+          }
         })
-        if (!result.problem){
+    } else {
+      addSpecies(name)
+        .then(result => {
           this.setState({
-            success: true
+            fetching: false
           })
-        } else {
-          this.setState({
-            error: true
-          })
-        }
-      })
+          if (!result.problem) {
+            this.setState({
+              success: true
+            })
+          } else {
+            this.setState({
+              error: true
+            })
+          }
+        })
+    }
   }
 
   _renderMessages() {
@@ -57,13 +77,27 @@ class AddSpecies extends Component {
       <div>
         <Message
           success
+          hidden={!this.state.success}
           header='Espécie Adicionada'
           content="Você adicionou uma espécie com sucesso"
         />
         <Message
           error
+          hidden={!this.state.error}
           header='Erro'
           content='Houve um erro ao tentar adicionar uma espécie'
+        />
+        <Message
+          success
+          hidden={!this.state.successUpdate}
+          header='Espécie Atualizada'
+          content="Você atualizou uma espécie com sucesso"
+        />
+        <Message
+          error
+          hidden={!this.state.errorUpdate}
+          header='Erro'
+          content='Houve um erro ao tentar atualizar uma espécie'
         />
       </div>
     )
@@ -73,21 +107,21 @@ class AddSpecies extends Component {
   _renderForm() {
     const { name } = this.state
     return(
-    <Form
-        loading = {this.state.fetching}
-        success = {this.state.success}
-        error = {this.state.error}
-        onSubmit={this.handleSubmit}
-      >
-      <Form.Field 
-        required
+    <div>
+      <Form
+          loading = {this.state.fetching}
+          onSubmit={this.handleSubmit}
         >
-        <label>Nome</label>
-        <Form.Input placeholder='Nome' name='name' onChange={this._handleChangeName} />
-      </Form.Field>
+        <Form.Field 
+          required
+          >
+          <label>Nome</label>
+          <Form.Input defaultValue={this.state.name} placeholder='Nome' name='name' onChange={this._handleChangeName} />
+        </Form.Field>
+        <Button type='submit'>{this.props.isEditing ? 'Atualizar Espécie' : 'Adicionar Espécie'}</Button>
+      </Form>
       {this._renderMessages()}
-      <Button type='submit'>Adicionar Espécie</Button>
-    </Form>
+    </div>
     )
   }
 
@@ -99,6 +133,7 @@ class AddSpecies extends Component {
             <Segment>
               {this._renderForm()}
             </Segment>
+            {this.props.isEditing ? <Button onClick={this.props.back}>Voltar</Button> : ''}
           </Grid.Column>
         </Grid.Row>
       </Grid>
