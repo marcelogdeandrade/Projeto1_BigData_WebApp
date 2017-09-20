@@ -120,15 +120,15 @@ export const getIllnesses = async () => {
     .then((response) => response)
 }
 
-export const addIllness = async (name, contagious) => {
+export const addIllness = async (name, isContagious) => {
   return api
-    .post('/illnesses', { name: name, contagious: contagious})
+    .post('/illnesses', { name: name, isContagious: isContagious})
     .then((response) => response)
 }
 
-export const updateIllness = async (idIllness, name, contagious) => {
+export const updateIllness = async (idIllness, name, isContagious) => {
   return api
-    .put('/illnesses', { idIllness: idIllness, name: name, contagious: contagious })
+    .put('/illnesses', { idIllness: idIllness, name: name, isContagious: isContagious })
     .then((response) => response)
 }
 

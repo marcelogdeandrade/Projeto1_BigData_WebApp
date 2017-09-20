@@ -27,9 +27,8 @@ class AddIllness extends Component {
       fetching: false,
       success: false,
       error: false,
-      isContagious: false,
+      isContagious: props.isContagious || false,
       name: props.name,
-      isContagious: props.isContagious
     }
   }
 
