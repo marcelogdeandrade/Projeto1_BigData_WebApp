@@ -1,17 +1,14 @@
 import React from 'react';
 import Route from 'react-router-dom/Route';
 import Switch from 'react-router-dom/Switch';
-import ListSpecies from './components/species/ListSpecies'
-import AddSpecies from './components/species/AddSpecies'
 import Home from './components/Home'
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 
+
 const App = () =>
   <Switch>
     <Route exact path="/" component={Home} />
-    <Route exact path="/list_species" component={ListSpecies} />
-    <Route exact path="/add_specie" component={AddSpecies} />
   </Switch>;
 
 export default App;

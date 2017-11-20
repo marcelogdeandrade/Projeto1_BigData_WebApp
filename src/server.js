@@ -29,12 +29,15 @@ server
     <head>
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta charSet='utf-8' />
-        <title>OngAnimais</title>
+        <title>Million Song</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         ${assets.client.css
           ? `<link rel="stylesheet" href="${assets.client.css}">`
           : ''}
         <script src="${assets.client.js}" defer></script>
+        <script src="http://code.highcharts.com/maps/highmaps.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+        <script src="http://code.highcharts.com/mapdata/custom/world.js"></script>
     </head>
     <body>
         <div id="root">${markup}</div>
